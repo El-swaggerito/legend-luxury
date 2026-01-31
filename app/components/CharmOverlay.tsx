@@ -44,12 +44,12 @@ export default function CharmOverlay({ product }: CharmOverlayProps) {
   };
 
   return (
-    <div className="absolute inset-0 z-10 hidden items-center justify-center pointer-events-none group-hover:flex">
-      <div className="flex gap-2 rounded-full bg-white/90 p-2 shadow-sm animate-in fade-in zoom-in-95 pointer-events-auto">
+    <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 sm:inset-0 sm:flex-row sm:items-center sm:justify-center sm:bg-black/20 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100 pointer-events-auto">
+      <div className="flex flex-col gap-2 sm:flex-row sm:rounded-full sm:bg-white/90 sm:p-2 sm:shadow-sm sm:animate-in sm:fade-in sm:zoom-in-95">
         <button
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           onClick={handleWishlist}
-          className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+          className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:shadow-none sm:bg-transparent transition-colors ${
             isWishlisted 
               ? "bg-red-50 text-red-500 hover:bg-red-100" 
               : "text-neutral-700 hover:bg-neutral-100 hover:text-accent-600"
@@ -60,14 +60,14 @@ export default function CharmOverlay({ product }: CharmOverlayProps) {
         <button
           aria-label="Add charm to cart"
           onClick={handleAddToCart}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 hover:text-accent-600 transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:shadow-none sm:bg-transparent text-neutral-700 hover:bg-neutral-100 hover:text-accent-600 transition-colors"
         >
           <LuShoppingCart className="h-5 w-5" />
         </button>
         <button
           aria-label="Quick view charm"
           onClick={handleQuickView}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 hover:text-accent-600 transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:shadow-none sm:bg-transparent text-neutral-700 hover:bg-neutral-100 hover:text-accent-600 transition-colors"
         >
           <LuEye className="h-5 w-5" />
         </button>

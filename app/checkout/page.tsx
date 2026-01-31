@@ -64,12 +64,6 @@ export default function CheckoutPage() {
                 
                 {/* Contact Info */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold font-serif text-neutral-900">Contact Information</h2>
-                    <span className="text-sm text-neutral-500">
-                      Already have an account? <Link href="/login" className="text-accent-600 hover:underline">Log in</Link>
-                    </span>
-                  </div>
                   <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</label>
                     <input

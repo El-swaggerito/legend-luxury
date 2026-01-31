@@ -121,13 +121,14 @@ body {
 .feature-grid {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto;
+  grid-auto-rows: 180px;
   gap: 20px;
 }
 @media (min-width: 768px) {
   .feature-grid {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 340px 240px 240px;
+    grid-auto-rows: auto;
   }
 }
 @media (min-width: 1024px) {
@@ -146,6 +147,13 @@ body {
   padding: 20px;
   position: relative;
   overflow: hidden;
+  height: 100%;
+}
+@media (min-width: 768px) {
+  .feature-card {
+    min-height: auto;
+    height: auto;
+  }
 }
 .feature-title {
   font-family: var(--font-serif), Georgia, "Times New Roman", serif;

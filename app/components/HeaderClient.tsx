@@ -4,18 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "../context/CartContext";
-import { LuShoppingCart, LuHeart, LuUser } from "react-icons/lu";
+import { LuShoppingCart, LuHeart, LuUser, LuMenu, LuX } from "react-icons/lu";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 
 export default function HeaderClient() {
   const pathname = usePathname();
   const { cartCount, toggleMiniCart } = useCart();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
 
-  const getLinkClass = (path: string) => {
+  const getLinkClass = (path: string, isMobile = false) => {
     const isActive = pathname === path;
-    return `typo-base px-3 py-2 rounded-md transition-colors ${
+    const baseClass = isMobile 
+      ? "block w-full px-4 py-3 rounded-lg text-lg font-medium transition-colors" 
+      : "typo-base px-3 py-2 rounded-md transition-colors";
+      
+    return `${baseClass} ${
       isActive
         ? "bg-neutral-100 text-accent-600 font-medium"
         : "text-neutral-800 hover:text-accent-600 hover:bg-neutral-50"
@@ -30,11 +35,16 @@ export default function HeaderClient() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
       <div className="bg-accent-600 text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
-          <p className="typo-small">Welcome to LegendLuxury online eCommerce store.</p>
+          <p className="typo-small">Welcome to LegendLuxury.</p>
           <div className="flex items-center gap-4">
             <span className="typo-small">Follow us:</span>
             <Link href="/#twitter" aria-label="Twitter" className="text-white/90 hover:text-white">
@@ -53,7 +63,16 @@ export default function HeaderClient() {
         </div>
       </div>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-        <Link href="/" aria-label="LegendLuxury Home" className="heading-2 text-accent-600">LegendLuxury</Link>
+        <div className="flex items-center gap-4">
+          <button
+            className="lg:hidden rounded-full p-2 text-neutral-800 hover:bg-neutral-50"
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="Open menu"
+          >
+            <LuMenu className="h-6 w-6" />
+          </button>
+          <Link href="/" aria-label="LegendLuxury Home" className="heading-2 text-accent-600">LegendLuxury</Link>
+        </div>
 
         <nav ref={navRef} aria-label="Primary" className="hidden lg:flex items-center gap-4">
           <Link href="/" className={getLinkClass("/")}>
@@ -91,17 +110,58 @@ export default function HeaderClient() {
             </span>
           </button>
           <button
-            className="rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600"
+            className="hidden sm:block rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600"
             aria-label="Wishlist"
           >
             <Link href="/wishlist">
               <LuHeart className="h-6 w-6" />
             </Link>
           </button>
-          <button className="rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600" aria-label="Account">
+          <button className="hidden sm:block rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600" aria-label="Account">
             <LuUser className="h-6 w-6" />
           </button>
         </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 lg:hidden" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      {/* Mobile Menu Drawer */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-full max-w-xs bg-white shadow-xl transition-transform duration-300 ease-in-out lg:hidden ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-4">
+          <span className="heading-3 text-accent-600">Menu</span>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="rounded-full p-2 text-neutral-500 hover:bg-neutral-100"
+            aria-label="Close menu"
+          >
+            <LuX className="h-6 w-6" />
+          </button>
+        </div>
+        
+        <nav className="flex flex-col gap-2 p-4">
+          <Link href="/" className={getLinkClass("/", true)}>Home</Link>
+          <Link href="/shop" className={getLinkClass("/shop", true)}>Shop</Link>
+          <Link href="/about" className={getLinkClass("/about", true)}>About Us</Link>
+          <Link href="/gallery" className={getLinkClass("/gallery", true)}>Gallery</Link>
+          <Link href="/blog" className={getLinkClass("/blog", true)}>Blog</Link>
+          <Link href="/contact" className={getLinkClass("/contact", true)}>Contact</Link>
+          
+          <div className="my-2 border-t border-neutral-200" />
+          
+          <Link href="/wishlist" className="flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium text-neutral-800 hover:bg-neutral-50">
+            <LuHeart className="h-5 w-5 text-accent-600" /> Wishlist
+          </Link>
+          <button className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium text-neutral-800 hover:bg-neutral-50 text-left">
+            <LuUser className="h-5 w-5 text-accent-600" /> Account
+          </button>
+        </nav>
       </div>
     </header>
   );
