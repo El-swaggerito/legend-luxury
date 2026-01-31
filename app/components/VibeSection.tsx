@@ -49,7 +49,7 @@ export default function VibeSection() {
               <video
                 ref={videoRef}
                 className="absolute inset-0 h-full w-full rounded-xl object-cover"
-                src="/homereel.mov"
+                src="https://res.cloudinary.com/dcs3xfpz0/video/upload/v1769848323/labgypmzqo4rfg07el4r.mp4"
                 controls
                 playsInline
                 muted

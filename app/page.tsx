@@ -15,7 +15,7 @@ export default function Home() {
       <RecommendedGrid />
       <VibeSection />
       <CharmsGrid distinctCategories hideFilters limit={8} />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <CTASection />
     </main>
   );

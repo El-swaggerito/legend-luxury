@@ -68,9 +68,9 @@ export default function HeaderClient() {
           <Link href="/gallery" className={getLinkClass("/gallery")}>
             Gallery
           </Link>
-          <Link href="/blog" className={getLinkClass("/blog")}>
+          {/* <Link href="/blog" className={getLinkClass("/blog")}>
             Blog
-          </Link>
+          </Link> */}
           <Link href="/contact" className={getLinkClass("/contact")}>
             Contact
           </Link>

@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="mt-0 border-t border-neutral-200 bg-white" role="contentinfo">
       <div className="mx-auto max-w-7xl px-4 py-12">
-        <div className="grid gap-8 lg:grid-cols-4">
+        <div className="grid gap-8 lg:grid-cols-3">
           <div>
             <Link href="/" className="heading-2 text-accent-600">LegendLuxury</Link>
             <p className="mt-3 typo-base text-neutral-600">
@@ -19,9 +19,10 @@ export default function Footer() {
               <li><Link href="/shop" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">Shop Crocs</Link></li>
               <li><Link href="/shop" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">Charms</Link></li>
               <li><Link href="/shop" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">Explore Styles</Link></li>
+            <li><Link href="/contact" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">Contact Us</Link></li>
             </ul>
           </nav>
-          <nav aria-label="Community">
+          {/* <nav aria-label="Community">
             <h3 className="heading-4 text-neutral-900">Community</h3>
             <ul className="mt-3 space-y-2 typo-base text-neutral-700">
               <li><Link href="/blog" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">Blog – Crocs Culture</Link></li>
@@ -29,7 +30,7 @@ export default function Footer() {
               <li><Link href="/" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">Shipping & Returns</Link></li>
               <li><Link href="/" className="hover:text-accent-600 focus-visible:ring-2 focus-visible:ring-accent-600 rounded">FAQs</Link></li>
             </ul>
-          </nav>
+          </nav> */}
           <nav aria-label="Socials">
             <h3 className="heading-4 text-neutral-900">Socials</h3>
             <ul className="mt-3 space-y-2 typo-base text-neutral-700">
