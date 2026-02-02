@@ -80,7 +80,7 @@ export default function CharmsFilterBar({
         ‹
       </button>
 
-      <div className="overflow-hidden">
+      <div className="overflow-hidden flex-1 min-w-0">
         <div className="flex gap-3 transition-transform duration-300 ease-in-out">
           {visibleFilters.map((f) => (
             <Chip

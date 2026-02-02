@@ -48,15 +48,15 @@ function ColorDots() {
   );
 }
 
-export default function RecommendedGrid() {
+export default function RecommendedGrid({ className = "" }: { className?: string }) {
   const { addItem } = useCart();
 
   return (
-    <section aria-label="Recommended Crocs" className="mx-auto max-w-7xl bg-white px-4 py-12">
+    <section aria-label="Recommended Crocs" className={`mx-auto max-w-7xl bg-white px-4 py-12 ${className}`}>
       <h2 className="mb-8 text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>
         <span className="text-[28px] md:text-[32px] font-medium">Recommended Crocs</span>
       </h2>
-      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="grid gap-4 grid-cols-1 min-[450px]:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         {cards.map((c) => (
           <li
             key={c.id}

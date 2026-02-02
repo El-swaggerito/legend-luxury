@@ -22,7 +22,7 @@ export default function ShopPage() {
       <section aria-label="Shop content" className="mx-auto max-w-7xl bg-white px-4 py-10">
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
           <FilterPanel
-            className=""
+            className="min-w-0"
             sections={[
               { title: "Availability", name: "avail", type: "radio", options: [
                 { label: "Best Sellers", value: "best", checked: true },
@@ -60,10 +60,10 @@ export default function ShopPage() {
             searchable
           />
 
-          <div>
-            <RecommendedGrid />
+          <div className="min-w-0">
+            <RecommendedGrid className="!px-0" />
             <PromoCard className="mt-8" />
-            <CharmsGrid gridClassName="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" className="mt-8 !px-0" />
+            <CharmsGrid gridClassName="grid gap-3 grid-cols-2 sm:gap-6 sm:grid-cols-3 lg:grid-cols-3" className="mt-8 !px-0" />
           </div>
         </div>
       </section>

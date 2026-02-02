@@ -83,7 +83,7 @@ function BadgeLabel({ badge }: { badge?: Charm["badge"] }) {
 
 export default function CharmsGrid({
   className = "",
-  gridClassName = "grid gap-6 sm:grid-cols-2 lg:grid-cols-4",
+  gridClassName = "grid gap-3 grid-cols-2 sm:gap-6 sm:grid-cols-3 lg:grid-cols-4",
   distinctCategories = false,
   hideFilters = false,
   limit,
