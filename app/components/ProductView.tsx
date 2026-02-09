@@ -13,14 +13,27 @@ export default function ProductView({ product }: { product: Product }) {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("M8/W10");
+  const [selectedColor, setSelectedColor] = useState("Default");
+
+  const isShoe = ["Clogs", "Men", "Women", "Kids", "Unisex"].includes(product.category);
+  const isCharm = !isShoe;
   
   const isWishlisted = isInWishlist(product.id);
 
   const handleAddToCart = () => {
+    const variantId = isShoe ? `${product.id}-${selectedSize}` : `${product.id}-${selectedColor}`;
+    
+    let variantTitle = product.title;
+    if (isShoe) {
+      variantTitle = `${product.title} (Size: ${selectedSize})`;
+    } else if (selectedColor !== "Default") {
+      variantTitle = `${product.title} (${selectedColor})`;
+    }
+
     for (let i = 0; i < quantity; i++) {
       addItem({
-        id: product.id,
-        title: product.title,
+        id: variantId,
+        title: variantTitle,
         price: product.price,
         image: product.img,
       });
@@ -95,28 +108,60 @@ export default function ProductView({ product }: { product: Product }) {
         </div>
 
         <div className="space-y-6">
-          {/* Size Selector */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="font-semibold text-neutral-900">Size</label>
-              <button className="text-accent-600 underline typo-small">Size Guide</button>
+          {/* Attribute Selector */}
+          {isShoe ? (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="font-semibold text-neutral-900">Size</label>
+                <button className="text-accent-600 underline typo-small">Size Guide</button>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {["M4/W6", "M5/W7", "M6/W8", "M7/W9", "M8/W10", "M9/W11", "M10/W12", "M11"].map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`rounded-lg border py-2.5 text-center typo-small transition-all ${
+                      selectedSize === size
+                        ? "border-accent-600 bg-accent-600 text-white shadow-md"
+                        : "border-neutral-200 bg-white text-neutral-900 hover:border-neutral-300"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {["M4/W6", "M5/W7", "M6/W8", "M7/W9", "M8/W10", "M9/W11", "M10/W12", "M11"].map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`rounded-lg border py-2.5 text-center typo-small transition-all ${
-                    selectedSize === size
-                      ? "border-accent-600 bg-accent-600 text-white shadow-md"
-                      : "border-neutral-200 bg-white text-neutral-900 hover:border-neutral-300"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
+          ) : (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="font-semibold text-neutral-900">Color</label>
+              </div>
+              <div className="flex gap-3">
+                {["Default", "Gold", "Silver", "Rose Gold"].map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`group relative h-10 w-10 rounded-full border-2 transition-all ${
+                      selectedColor === color
+                        ? "border-accent-600 ring-2 ring-accent-100 ring-offset-2"
+                        : "border-transparent hover:border-neutral-300"
+                    }`}
+                    aria-label={`Select ${color}`}
+                    title={color}
+                  >
+                    <span 
+                      className={`absolute inset-1 rounded-full shadow-sm ${
+                        color === "Default" ? "bg-gradient-to-br from-neutral-100 to-neutral-300" :
+                        color === "Gold" ? "bg-gradient-to-br from-yellow-300 to-yellow-500" :
+                        color === "Silver" ? "bg-gradient-to-br from-gray-200 to-gray-400" :
+                        "bg-gradient-to-br from-rose-200 to-rose-400"
+                      }`} 
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Quantity & Add to Cart */}
           <div className="flex gap-4">
