@@ -179,13 +179,15 @@ export default function CharmsGrid({
           >
             <BadgeLabel badge={c.badge} />
             <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
-              <Image
-                src={c.img}
-                alt={c.title}
-                fill
-                className="object-contain transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
-              />
+              <Link href={`/product/${c.id}`} className="block w-full h-full">
+                <Image
+                  src={c.img}
+                  alt={c.title}
+                  fill
+                  className="object-contain transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
+                />
+              </Link>
               <CharmOverlay
                 product={{
                   id: c.id,
@@ -201,7 +203,9 @@ export default function CharmsGrid({
                 <span aria-hidden="true">★★★★★</span>
                 <span className="typo-small text-neutral-500">(738)</span>
               </div>
-              <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900">{c.title}</p>
+              <Link href={`/product/${c.id}`} className="block">
+                <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
+              </Link>
               <div className="mt-3 flex items-center justify-between">
                 <div>
                   <div className="typo-base font-bold text-neutral-900">$80.00</div>

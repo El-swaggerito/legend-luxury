@@ -4,23 +4,7 @@ import Link from "next/link";
 import CharmOverlay from "./CharmOverlay";
 import { useCart } from "../context/CartContext";
 
-type Badge = "HOT" | "25% OFF" | "BEST DEALS" | "SALE" | null;
-
-const cards: Array<{
-  id: string;
-  img: string;
-  title: string;
-  badge: Badge;
-}> = [
-  { id: "c1", img: "/images/ind blocks (1).png", title: "Blush Bloom Clogs – Floral Edition", badge: "HOT" },
-  { id: "c2", img: "/images/ind blocks (2).png", title: "Blush Bloom Clogs – Floral Edition", badge: null },
-  { id: "c3", img: "/images/ind blocks (3).png", title: "Blush Bloom Clogs – Floral Edition", badge: "25% OFF" },
-  { id: "c4", img: "/images/ind blocks (1).png", title: "Blush Bloom Clogs – Floral Edition", badge: null },
-  { id: "c5", img: "/images/ind blocks (2).png", title: "Blush Bloom Clogs – Floral Edition", badge: null },
-  { id: "c6", img: "/images/ind blocks (3).png", title: "Blush Bloom Clogs – Floral Edition", badge: "BEST DEALS" },
-  { id: "c7", img: "/images/ind blocks (1).png", title: "Blush Bloom Clogs – Floral Edition", badge: null },
-  { id: "c8", img: "/images/ind blocks (2).png", title: "Blush Bloom Clogs – Floral Edition", badge: "SALE" },
-];
+import { RECOMMENDED_PRODUCTS, Badge } from "../data/static-products";
 
 function BadgeLabel({ badge }: { badge: Badge }) {
   if (!badge) return null;
@@ -57,50 +41,56 @@ export default function RecommendedGrid({ className = "" }: { className?: string
         <span className="text-[28px] md:text-[32px] font-medium">Recommended Crocs</span>
       </h2>
       <ul className="grid gap-4 grid-cols-1 min-[450px]:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-        {cards.map((c) => (
+        {RECOMMENDED_PRODUCTS.map((c) => (
           <li
             key={c.id}
             className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md animate-fade-in"
           >
             <BadgeLabel badge={c.badge} />
             <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
-              <Image
-                src={c.img}
-                alt={c.title}
-                fill
-                className="object-contain transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
-              />
+              <Link href={`/product/${c.id}`} className="block w-full h-full">
+                <Image
+                  src={c.img}
+                  alt={c.title}
+                  fill
+                  className="object-contain transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
+                />
+              </Link>
               <CharmOverlay
                 product={{
                   id: c.id,
                   title: c.title,
-                  price: 80,
+                  price: c.price,
                   image: c.img,
-                  category: "Recommended",
+                  category: c.category,
                 }}
               />
             </div>
             <div className="mt-3 px-1">
               <div className="flex items-center gap-1 text-warning-500">
                 <span aria-hidden="true">★★★★★</span>
-                <span className="typo-small text-neutral-500">(738)</span>
+                <span className="typo-small text-neutral-500">({c.reviews})</span>
               </div>
-              <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900">{c.title}</p>
+              <Link href={`/product/${c.id}`} className="block">
+                <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
+              </Link>
               <div className="mt-2">
                 <ColorDots />
               </div>
               <div className="mt-3 flex items-center justify-between">
                 <div>
-                  <div className="typo-base font-bold text-neutral-900">$80.00</div>
-                  <div className="typo-small text-neutral-400 line-through">$100.00</div>
+                  <div className="typo-base font-bold text-neutral-900">${c.price.toFixed(2)}</div>
+                  {c.originalPrice && (
+                    <div className="typo-small text-neutral-400 line-through">${c.originalPrice.toFixed(2)}</div>
+                  )}
                 </div>
                 <button
                   onClick={() =>
                     addItem({
                       id: c.id,
                       title: c.title,
-                      price: 80,
+                      price: c.price,
                       image: c.img,
                     })
                   }
