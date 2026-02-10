@@ -31,13 +31,19 @@ export function getCharms(): Product[] {
         const img = `/images/charms/${cat}/${f.name}`;
         const id = `${cat}-${title}`.toLowerCase().replace(/\s+/g, "-");
         
+        let price = 3.50; // Default price
+        const catLower = cat.toLowerCase();
+        if (catLower.includes("designer") || catLower.includes("chains")) {
+          price = 4.50;
+        }
+
         charms.push({
           id,
           title,
           img,
           category: toTitleCase(cat),
           badge: null,
-          price: 15, // Default price for charms
+          price,
           rating: 4.8,
           reviews: 120,
           description: `Add a touch of personality to your Crocs with the ${title} charm. Easy to insert and remove, this high-quality charm is perfect for customizing your look.`

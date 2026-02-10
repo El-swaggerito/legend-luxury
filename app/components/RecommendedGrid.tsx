@@ -32,8 +32,46 @@ function ColorDots() {
   );
 }
 
-export default function RecommendedGrid({ className = "" }: { className?: string }) {
+export default function RecommendedGrid({ 
+  className = "",
+  filters
+}: { 
+  className?: string;
+  filters?: Record<string, string | string[]>;
+}) {
   const { addItem } = useCart();
+
+  const filteredProducts = RECOMMENDED_PRODUCTS.filter((p) => {
+    // Category Filter
+    if (filters?.cat && filters.cat !== "all" && filters.cat !== "crocs") {
+      return false;
+    }
+
+    // Availability Filter
+    if (filters?.avail && filters.avail !== "all") {
+      if (filters.avail === "best" && p.badge !== "BEST DEALS" && p.badge !== "HOT") return false;
+      if (filters.avail === "new" && p.badge !== "HOT") return false;
+      if (filters.avail === "sales" && p.badge !== "SALE" && p.badge !== "25% OFF") return false;
+    }
+
+    // Price Filter
+    if (filters?.price && filters.price !== "all") {
+      const price = p.price;
+      switch (filters.price) {
+        case "u20": if (price >= 20) return false; break;
+        case "20-50": if (price < 20 || price >= 50) return false; break;
+        case "50-100": if (price < 50 || price >= 100) return false; break;
+        case "100-200": if (price < 100 || price >= 200) return false; break;
+        case "o200": if (price < 200) return false; break;
+      }
+    }
+
+    return true;
+  });
+
+  if (filteredProducts.length === 0) {
+    return null;
+  }
 
   return (
     <section aria-label="Recommended Crocs" className={`mx-auto max-w-7xl bg-white px-4 py-12 ${className}`}>
@@ -41,7 +79,7 @@ export default function RecommendedGrid({ className = "" }: { className?: string
         <span className="text-[28px] md:text-[32px] font-medium">Recommended Crocs</span>
       </h2>
       <ul className="grid gap-4 grid-cols-1 min-[450px]:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-        {RECOMMENDED_PRODUCTS.map((c) => (
+        {filteredProducts.map((c) => (
           <li
             key={c.id}
             className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md animate-fade-in"

@@ -11,6 +11,7 @@ type Charm = {
   title: string;
   img: string;
   category: string;
+  price: number;
   badge?: "HOT" | "25% OFF" | "BEST DEALS" | "SALE";
 };
 
@@ -87,12 +88,14 @@ export default function CharmsGrid({
   distinctCategories = false,
   hideFilters = false,
   limit,
+  filters
 }: {
   className?: string;
   gridClassName?: string;
   distinctCategories?: boolean;
   hideFilters?: boolean;
   limit?: number;
+  filters?: Record<string, string | string[]>;
 }) {
   const { addItem } = useCart();
   const [active, setActive] = useState<string>("All");
@@ -125,7 +128,7 @@ export default function CharmsGrid({
     return ["All", ...Array.from(set).sort((a, b) => a.localeCompare(b))];
   }, [charms]);
 
-  const filters: FilterChip[] = useMemo(
+  const filtersList: FilterChip[] = useMemo(
     () =>
       categories.map((key) => ({
         key,
@@ -136,12 +139,44 @@ export default function CharmsGrid({
 
   const visible = useMemo(() => {
     let result = charms;
+    
+    // Apply Shop Filters first
+    if (filters) {
+      // Category Filter (Handled by parent conditional rendering mostly, but double check)
+      if (filters.cat && filters.cat !== "all" && filters.cat !== "charms") {
+        return [];
+      }
+
+      // Availability Filter
+      if (filters.avail && filters.avail !== "all") {
+        if (filters.avail === "best") result = result.filter(c => c.badge === "BEST DEALS" || c.badge === "HOT");
+        else if (filters.avail === "new") result = result.filter(c => c.badge === "HOT");
+        else if (filters.avail === "sales") result = result.filter(c => c.badge === "SALE" || c.badge === "25% OFF");
+      }
+
+      // Price Filter
+      if (filters.price && filters.price !== "all") {
+        result = result.filter(c => {
+          const price = c.price;
+          switch (filters.price) {
+            case "u20": return price < 20;
+            case "20-50": return price >= 20 && price < 50;
+            case "50-100": return price >= 50 && price < 100;
+            case "100-200": return price >= 100 && price < 200;
+            case "o200": return price >= 200;
+            default: return true;
+          }
+        });
+      }
+    }
+
+    // Internal Category Filter (CharmsFilterBar)
     if (active !== "All") {
-      result = charms.filter((c) => c.category === active);
+      result = result.filter((c) => c.category === active);
     } else if (distinctCategories) {
       // Return only the first charm from each category
       const seen = new Set<string>();
-      result = charms.filter((c) => {
+      result = result.filter((c) => {
         if (seen.has(c.category)) return false;
         seen.add(c.category);
         return true;
@@ -152,7 +187,9 @@ export default function CharmsGrid({
       return result.slice(0, limit);
     }
     return result;
-  }, [active, charms, distinctCategories, limit]);
+  }, [active, charms, distinctCategories, limit, filters]);
+
+  if (visible.length === 0) return null;
 
   return (
     <section aria-label="Recommended Charms" className={`mx-auto max-w-7xl bg-white px-4 py-12 ${className}`}>
@@ -163,7 +200,7 @@ export default function CharmsGrid({
       {!hideFilters && (
         <div className="mb-6 -mx-4">
           <CharmsFilterBar
-            filters={filters as FilterChipType[]}
+            filters={filtersList as FilterChipType[]}
             active={active}
             onSelect={(key) => setActive(key)}
             className="mx-4"
@@ -192,7 +229,7 @@ export default function CharmsGrid({
                 product={{
                   id: c.id,
                   title: c.title,
-                  price: 80, // Hardcoded price as per UI
+                  price: c.price,
                   image: c.img,
                   category: c.category,
                 }}
@@ -208,15 +245,14 @@ export default function CharmsGrid({
               </Link>
               <div className="mt-3 flex items-center justify-between">
                 <div>
-                  <div className="typo-base font-bold text-neutral-900">$80.00</div>
-                  <div className="typo-small text-neutral-400 line-through">$100.00</div>
+                  <div className="typo-base font-bold text-neutral-900">${c.price.toFixed(2)}</div>
                 </div>
                 <button
                   onClick={() =>
                     addItem({
                       id: c.id,
                       title: c.title,
-                      price: 80,
+                      price: c.price,
                       image: c.img,
                     })
                   }

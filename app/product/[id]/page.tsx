@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getAllProducts, getProductById } from "../../lib/server-products";
 import ProductView from "../../components/ProductView";
 import RecommendedGrid from "../../components/RecommendedGrid";
+import CharmsGrid from "@/app/components/CharmsGrid";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -64,7 +65,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* You May Also Like */}
         <div className="mt-24 border-t border-neutral-200 pt-16">
-          <RecommendedGrid />
+          <CharmsGrid distinctCategories hideFilters limit={8} />
         </div>
       </div>
     </main>

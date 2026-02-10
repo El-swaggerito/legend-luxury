@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import PromoCard from "../components/PromoCard";
 import FilterPanel, { Section } from "../components/FilterPanel";
 import RecommendedGrid from "../components/RecommendedGrid";
 import CharmsGrid from "../components/CharmsGrid";
 
 export default function ShopPage() {
+  const [filters, setFilters] = useState<Record<string, string | string[]>>({});
+
   return (
     <main>
       <section aria-label="Shop banner" className="relative isolate overflow-hidden bg-gradient-to-b from-accent-600 to-accent-100">
@@ -23,50 +28,51 @@ export default function ShopPage() {
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
           <FilterPanel
             className="min-w-0"
+            onChange={(state) => setFilters(state)}
             sections={[
               { title: "Availability", name: "avail", type: "radio", options: [
-                { label: "Best Sellers", value: "best", checked: true },
+                { label: "All", value: "all", checked: true },
+                { label: "Best Sellers", value: "best" },
                 { label: "New Arrivals", value: "new" },
                 { label: "On Sales", value: "sales" },
-                { label: "In Stock", value: "stock" },
               ]},
               { title: "Category", name: "cat", type: "radio", options: [
                 { label: "All", value: "all", checked: true },
                 { label: "Crocs", value: "crocs" },
                 { label: "Charms", value: "charms" },
               ]},
-              { title: "Gender", name: "gen", type: "radio", options: [
-                { label: "Unisex", value: "unisex", checked: true },
-                { label: "Men", value: "men" },
-                { label: "Women", value: "women" },
-                { label: "Kids", value: "kids" },
-              ]},
-              { title: "Size", name: "size", type: "radio", options: [
-                { label: "US 4 – 12 (Adults)", value: "adult", checked: true },
-                { label: "Kids Sizes (C1 – C13, J1 – J6)", value: "kids" },
-                { label: "One Size (for charms)", value: "one" },
-              ]},
               { title: "Price Tier", name: "price", type: "radio", options: [
-                { label: "All Price", value: "all", checked: true },
+                { label: "All Prices", value: "all", checked: true },
                 { label: "Under $20", value: "u20" },
-                { label: "$25 to $100", value: "25-100" },
-                { label: "$100 to $300", value: "100-300" },
-                { label: "$300 to $500", value: "300-500" },
-                { label: "$500 to $1,000", value: "500-1000" },
-                { label: "$1,000 to $10,000", value: "1000-10000" },
+                { label: "$20 to $50", value: "20-50" },
+                { label: "$50 to $100", value: "50-100" },
+                { label: "$100 to $200", value: "100-200" },
+                { label: "Over $200", value: "o200" },
               ]},
             ]}
-            priceRange={{ min: 0, max: 1000, valueMin: 50, valueMax: 500 }}
-            searchable
           />
 
           <div className="min-w-0">
-            <RecommendedGrid className="!px-0" />
+            {(filters.cat === "all" || filters.cat === "crocs") && (
+              <RecommendedGrid 
+                className="!px-0" 
+                filters={filters}
+              />
+            )}
+            
             <PromoCard className="mt-8" />
-            <CharmsGrid gridClassName="grid gap-3 grid-cols-2 sm:gap-6 sm:grid-cols-3 lg:grid-cols-3" className="mt-8 !px-0" />
+            
+            {(filters.cat === "all" || filters.cat === "charms") && (
+              <CharmsGrid 
+                gridClassName="grid gap-3 grid-cols-2 sm:gap-6 sm:grid-cols-3 lg:grid-cols-3" 
+                className="mt-8 !px-0"
+                filters={filters}
+              />
+            )}
           </div>
         </div>
       </section>
     </main>
   );
 }
+
