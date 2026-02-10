@@ -23,8 +23,8 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       aria-label={`Filter by ${label}`}
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 typo-small shrink-0 snap-start ${
-        active ? "border-accent-600 bg-accent-100 text-accent-600" : "border-neutral-200 bg-white text-neutral-700"
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 typo-small shrink-0 snap-start cursor-pointer transition-colors ${
+        active ? "border-accent-600 bg-accent-100 text-accent-600" : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50"
       }`}
     >
       {icon ? (
@@ -51,7 +51,7 @@ export default function CharmsFilterBar({
   className?: string;
 }) {
   const [startIndex, setStartIndex] = useState(0);
-  const ITEMS_VISIBLE = 6;
+  const ITEMS_VISIBLE = 10;
 
   const canPrev = startIndex > 0;
   const canNext = startIndex + ITEMS_VISIBLE < filters.length;
@@ -73,7 +73,7 @@ export default function CharmsFilterBar({
         aria-label="Previous filters"
         disabled={!canPrev}
         onClick={handlePrev}
-        className={`z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-white text-neutral-700 transition-opacity ${
+        className={`z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-white text-neutral-700 transition-opacity cursor-pointer ${
           canPrev ? "hover:bg-neutral-50" : "opacity-40 cursor-not-allowed"
         }`}
       >
@@ -99,7 +99,7 @@ export default function CharmsFilterBar({
         aria-label="Next filters"
         disabled={!canNext}
         onClick={handleNext}
-        className={`z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-white text-neutral-700 transition-opacity ${
+        className={`z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-white text-neutral-700 transition-opacity cursor-pointer ${
           canNext ? "hover:bg-neutral-50" : "opacity-40 cursor-not-allowed"
         }`}
       >

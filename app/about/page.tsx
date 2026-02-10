@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import CTASection from "../components/CTASection";
 
 export default function AboutPage() {
   return (
@@ -37,7 +38,7 @@ export default function AboutPage() {
         <div className="grid items-start gap-6 lg:grid-cols-2">
           <figure className="relative aspect-[4/3] w-full overflow-hidden rounded-xl shadow-md">
             <Image
-              src="/images/where comfort meets style main.png"
+              src="/images/where comfort meets style main.jpg"
               alt="Friends enjoying the day in LegendLuxury Crocs"
               fill
               className="object-cover"
@@ -67,15 +68,15 @@ export default function AboutPage() {
             <div className="mt-4 grid grid-cols-3 gap-2">
               {[
                 {
-                  src: "/images/where comfort meets style small.png",
+                  src: "/images/where comfort meets style small 1.jpg",
                   alt: "Pastel Crocs on city steps",
                 },
                 {
-                  src: "/images/where comfort meets style small.png",
+                  src: "/images/where comfort meets style small 2.jpg",
                   alt: "Close-up detail of Crocs strap",
                 },
                 {
-                  src: "/images/where comfort meets style small.png",
+                  src: "/images/where comfort meets style small 3.jpg",
                   alt: "Charms arranged for customization",
                 },
               ].map((i, idx) => (
@@ -253,108 +254,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <section
-        id="why"
-        aria-label="Why LegendLuxury Crocs"
-        className="mx-auto max-w-7xl bg-white px-4 py-10"
-      >
-        <h2
-          className="text-center heading-2 text-neutral-900"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
-          Why LegendLuxury Crocs?
-        </h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              title: "Best Prices & Offers",
-              desc: "Enjoy competitive pricing and seasonal deals—style that suits every budget.",
-              icon: "/decors/best price.png",
-              alt: "Best Price icon",
-            },
-            {
-              title: "Wide Assortment",
-              desc: "Explore classic clogs, new collections, and custom charms tailored to you.",
-              icon: "/decors/wide assortment.png",
-              alt: "Wide Assortment icon",
-            },
-            {
-              title: "100% Satisfaction",
-              desc: "Shop confidently with dependable quality and friendly support.",
-              icon: "/decors/100%.png",
-              alt: "100% Satisfaction icon",
-            },
-          ].map((c) => (
-            <div
-              key={c.title}
-              className="benefit-card border-neutral-200 bg-white shadow-sm"
-            >
-              <div className="benefit-icon">
-                <Image
-                  src={c.icon}
-                  alt={c.alt ?? `${c.title} icon`}
-                  width={64}
-                  height={64}
-                />
-              </div>
-              <h3 className="benefit-title typo-base">{c.title}</h3>
-              <p className="benefit-desc typo-base">{c.desc}</p>
-              <Link href="/about" className="benefit-link typo-small">
-                Read more
-              </Link>
-            </div>
-          ))}
-        </div>
-        <h2 className="mt-10 text-center heading-2 text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>Why LegendLuxury Crocs?</h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="photo-card border border-neutral-200 bg-white shadow-sm">
-            <figure className="photo-img">
-              <Image
-                src="/images/comfort.png"
-                alt="Comfort: premium materials and ergonomic design"
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 95vw, (max-width:1024px) 44vw, 30vw"
-              />
-            </figure>
-            <h3 className="photo-title typo-base">Comfort you can count on</h3>
-            <p className="photo-desc typo-base">Croslite cushioning absorbs impact and supports your stride.</p>
-            <p className="photo-desc typo-base">Ergonomic footbeds cradle arches for natural alignment.</p>
-            <p className="photo-desc typo-base">Durable materials deliver all‑day wearability.</p>
-          </div>
-          <div className="photo-card border border-neutral-200 bg-white shadow-sm">
-            <figure className="photo-img">
-              <Image
-                src="/images/fun and unique.png"
-                alt="Fun: vibrant colors and playful patterns"
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 95vw, (max-width:1024px) 44vw, 30vw"
-              />
-            </figure>
-            <h3 className="photo-title typo-base">Fun and unique</h3>
-            <p className="photo-desc typo-base">Customize with Jibbitz charms, colors, and patterns.</p>
-            <p className="photo-desc typo-base">Playful designs let your personality shine.</p>
-            <p className="photo-desc typo-base">Mix‑and‑match options for endless creativity.</p>
-          </div>
-          <div className="photo-card border border-neutral-200 bg-white shadow-sm">
-            <figure className="photo-img">
-              <Image
-                src="/images/for everyone.png"
-                alt="For everyone: styles for all, inclusive sizing"
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 95vw, (max-width:1024px) 44vw, 30vw"
-              />
-            </figure>
-            <h3 className="photo-title typo-base">For everyone</h3>
-            <p className="photo-desc typo-base">Universal sizing and inclusive designs for every foot.</p>
-            <p className="photo-desc typo-base">Versatile looks for school, work, weekends, and events.</p>
-            <p className="photo-desc typo-base">A pair for every walk of life.</p>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </main>
   );
 }

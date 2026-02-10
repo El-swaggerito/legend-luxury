@@ -60,15 +60,15 @@ export default function ShopPage() {
               />
             )}
             
-            <PromoCard className="mt-8" />
             
             {(filters.cat === "all" || filters.cat === "charms") && (
               <CharmsGrid 
-                gridClassName="grid gap-3 grid-cols-2 sm:gap-6 sm:grid-cols-3 lg:grid-cols-3" 
-                className="mt-8 !px-0"
-                filters={filters}
+              gridClassName="grid gap-3 grid-cols-2 sm:gap-6 sm:grid-cols-3 lg:grid-cols-3" 
+              className="mt-8 !px-0"
+              filters={filters}
               />
             )}
+            <PromoCard className="mt-8" />
           </div>
         </div>
       </section>
