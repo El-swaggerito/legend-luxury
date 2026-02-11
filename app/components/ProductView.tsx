@@ -5,11 +5,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { LuHeart, LuMinus, LuPlus, LuShare2, LuStar } from "react-icons/lu";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 import { useWishlist } from "../context/WishlistContext";
 import { Product } from "../data/static-products";
 
 export default function ProductView({ product }: { product: Product }) {
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("M8/W10");
@@ -100,9 +102,9 @@ export default function ProductView({ product }: { product: Product }) {
           </div>
 
           <div className="mt-6 flex items-baseline gap-4">
-            <span className="heading-2 text-neutral-900">${product.price.toFixed(2)}</span>
+            <span className="heading-2 text-neutral-900">{formatPrice(product.price)}</span>
             {product.originalPrice && (
-              <span className="text-lg text-neutral-400 line-through">${product.originalPrice.toFixed(2)}</span>
+              <span className="text-lg text-neutral-400 line-through">{formatPrice(product.originalPrice)}</span>
             )}
           </div>
         </div>

@@ -10,6 +10,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { LuCreditCard, LuLock } from "react-icons/lu";
+import { useCurrency } from "../../context/CurrencyContext";
 
 // Make sure to replace with your public key from Stripe Dashboard
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_placeholder");
@@ -49,7 +50,7 @@ function StripeForm({ onSubmit }: { onSubmit: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2">
+    <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2">
       <div className="rounded-lg border border-neutral-300 bg-white p-4 transition-all focus-within:border-accent-500 focus-within:ring-1 focus-within:ring-accent-500">
         <CardElement
           options={{
@@ -70,7 +71,8 @@ function StripeForm({ onSubmit }: { onSubmit: () => void }) {
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}
       <button
-        type="submit"
+        type="button"
+        onClick={handleSubmit}
         disabled={!stripe || loading}
         className="flex w-full items-center justify-center gap-2 rounded-full bg-accent-600 px-6 py-4 font-bold text-white transition-all hover:bg-accent-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
@@ -85,17 +87,17 @@ function StripeForm({ onSubmit }: { onSubmit: () => void }) {
       <p className="text-center text-xs text-neutral-500">
         Your payment is processed securely by Stripe.
       </p>
-    </form>
+    </div>
   );
 }
 
-export default function PaymentSection({ total }: { total: number }) {
+export default function PaymentSection({ total, onSuccess }: { total: number; onSuccess: () => void }) {
   const [method, setMethod] = useState<"stripe" | "paypal">("stripe");
   const { register, formState: { errors } } = useFormContext();
+  const { currency } = useCurrency();
 
   const handlePaymentSuccess = () => {
-      alert("Payment Successful! (This is a demo)");
-      // Redirect to success page
+      onSuccess();
   };
 
   return (
@@ -158,17 +160,18 @@ export default function PaymentSection({ total }: { total: number }) {
 
         {method === "paypal" && (
           <div className="animate-in fade-in slide-in-from-top-2">
-            <PayPalScriptProvider options={{ clientId: "test", currency: "USD" }}>
+            <PayPalScriptProvider options={{ clientId: "test", currency: currency }}>
                 <PayPalButtons 
                     style={{ layout: "vertical", shape: "rect", borderRadius: 10 }}
                     createOrder={(data, actions) => {
+                        const amount = currency === "USD" ? total * 0.74 : total;
                         return actions.order.create({
                             intent: "CAPTURE",
                             purchase_units: [
                                 {
                                     amount: {
-                                        currency_code: "USD",
-                                        value: total.toFixed(2),
+                                        currency_code: currency,
+                                        value: amount.toFixed(2),
                                     },
                                 },
                             ],

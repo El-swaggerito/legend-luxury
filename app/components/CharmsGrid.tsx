@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import CharmsFilterBar, { FilterChip as FilterChipType } from "./CharmsFilterBar";
 import CharmOverlay from "./CharmOverlay";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 type Charm = {
   id: string;
@@ -98,6 +99,7 @@ export default function CharmsGrid({
   filters?: Record<string, string | string[]>;
 }) {
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
   const [active, setActive] = useState<string>("All");
   const [charms, setCharms] = useState<Charm[]>([]);
 
@@ -245,7 +247,7 @@ export default function CharmsGrid({
               </Link>
               <div className="mt-3 flex items-center justify-between">
                 <div>
-                  <div className="typo-base font-bold text-neutral-900">${c.price.toFixed(2)}</div>
+                  <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>
                 </div>
                 <button
                   onClick={() =>

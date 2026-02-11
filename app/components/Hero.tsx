@@ -14,29 +14,28 @@ export default function Hero() {
 
   return (
     <section aria-label="Promotions" className="relative isolate overflow-hidden bg-white">
-      <div className="pointer-events-none absolute left-2 top-10 h-20 w-20 md:left-6 md:top-16 md:h-28 md:w-28">
+      <div className="pointer-events-none absolute left-2 top-10 h-20 w-20 md:left-6 md:top-16 md:h-28 md:w-28 z-10">
         <Image src="/decors/herodeco1.png" alt="" fill className="object-contain" sizes="112px" />
       </div>
-      <div className="pointer-events-none absolute left-24 top-48 h-12 w-12 md:left-40 md:top-56">
+      <div className="pointer-events-none absolute left-24 top-48 h-12 w-12 md:left-40 md:top-56 z-10">
         <Image src="/decors/herodeco2.png" alt="" fill className="object-contain" sizes="48px" />
       </div>
-      <div className="pointer-events-none absolute left-10 top-40 h-8 w-8 md:left-20 md:top-44">
+      <div className="pointer-events-none absolute left-10 top-40 h-8 w-8 md:left-20 md:top-44 z-10">
         <Image src="/decors/herodeco2.png" alt="Heart sticker" fill className="object-contain" sizes="32px" />
       </div>
-      <div className="pointer-events-none absolute right-10 top-20 h-16 w-16 md:right-20 md:top-24">
+      <div className="pointer-events-none absolute right-10 top-20 h-16 w-16 md:right-20 md:top-24 z-10">
         <Image src="/decors/herodeco3.png" alt="" fill className="object-contain" sizes="64px" />
       </div>
-      <div className="pointer-events-none absolute right-6 bottom-24 h-14 w-14 md:right-12 md:bottom-32">
+      <div className="pointer-events-none absolute right-10 top-30 h-16 w-16 md:right-20 md:top-44 z-10">
         <Image src="/decors/herodeco4.png" alt="" fill className="object-contain" sizes="56px" />
-      </div>
-
+      </div>4
       <div className="mx-auto max-w-7xl px-4 py-12 md:py-20">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="heading-1 text-neutral-900 font-bold leading-[1.1] md:text-[56px] md:leading-[1.05]">
             <span className="block">
               Express <span className="brush-underline">Yourself</span> with Custom-
             </span>
-            <span className="block">
+            <span className="block mt-3">
               <span className="highlight-blob highlight-green">Designed</span> Crocs and{" "}
               <span className="highlight-blob highlight-pink">Charms!</span>
             </span>
@@ -57,27 +56,45 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="mt-10 overflow-x-hidden">
-          <ul className="flex gap-4">
+        <div className="mt-10 overflow-hidden relative">
+          <div className="flex gap-4 animate-scroll hover:pause-animation w-max">
             {[
               { id: "card1", title: "summer festivals", img: "/images/ind blocks (1).png" },
               { id: "card2", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
               { id: "card3", title: "summer festivals", img: "/images/ind blocks (3).png" },
               { id: "card4", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
-              { id: "card5", title: "summer festivals", img: "/images/ind blocks (1).png" }
+              { id: "card5", title: "summer festivals", img: "/images/ind blocks (1).png" },
+              // Duplicates for seamless loop
+              { id: "card1-dup", title: "summer festivals", img: "/images/ind blocks (1).png" },
+              { id: "card2-dup", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
+              { id: "card3-dup", title: "summer festivals", img: "/images/ind blocks (3).png" },
+              { id: "card4-dup", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
+              { id: "card5-dup", title: "summer festivals", img: "/images/ind blocks (1).png" }
             ].map((c) => (
-              <li key={c.id} className="relative w-64 flex-none overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="absolute left-3 top-3 rounded-full bg-neutral-900/80 px-2 py-1 typo-small text-white">
+              <div key={c.id} className="relative w-64 flex-none overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition-transform hover:scale-[1.02]">
+                <div className="absolute left-3 top-3 z-10 rounded-full bg-neutral-900/80 px-2 py-1 typo-small text-white">
                   {c.title}
                 </div>
                 <div className="relative aspect-[4/3] w-full">
                   <Image src={c.img} alt={c.title} fill className="object-cover" sizes="256px" />
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
+      <style>{`
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+          animation: scroll 20s linear infinite;
+        }
+        .hover\\:pause-animation:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }

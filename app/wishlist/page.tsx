@@ -5,10 +5,12 @@ import { LuHeart, LuShoppingCart } from "react-icons/lu";
 
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 export default function WishlistPage() {
   const { items, toggleWishlist } = useWishlist();
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
 
   if (items.length === 0) {
     return (
@@ -51,7 +53,7 @@ export default function WishlistPage() {
             </div>
             <div className="mt-4">
               <h3 className="text-lg font-semibold text-neutral-900 line-clamp-1">{item.title}</h3>
-              <p className="mt-1 font-bold text-neutral-900">${item.price.toFixed(2)}</p>
+              <p className="mt-1 font-bold text-neutral-900">{formatPrice(item.price)}</p>
               <button
                 onClick={() =>
                   addItem({

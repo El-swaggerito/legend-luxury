@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LuX } from "react-icons/lu";
+import { useCurrency } from "./CurrencyContext";
 
 export type Product = {
   id: string;
@@ -22,6 +23,7 @@ const QuickViewContext = createContext<QuickViewContextValue | null>(null);
 
 export function QuickViewProvider({ children }: { children: React.ReactNode }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { formatPrice } = useCurrency();
 
   const openQuickView = (product: Product) => setSelectedProduct(product);
   const closeQuickView = () => setSelectedProduct(null);
@@ -66,7 +68,7 @@ export function QuickViewProvider({ children }: { children: React.ReactNode }) {
                     {selectedProduct.title}
                   </h2>
                   <div className="mt-4 text-xl font-bold text-neutral-900">
-                    ${selectedProduct.price.toFixed(2)}
+                    {formatPrice(selectedProduct.price)}
                   </div>
                   <p className="mt-4 text-neutral-600 leading-relaxed">
                     {selectedProduct.description || "Experience comfort and style with this premium item. Perfect for any occasion and built with our signature comfort technology."}

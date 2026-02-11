@@ -4,15 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 import { LuShoppingCart, LuHeart, LuUser, LuMenu, LuX } from "react-icons/lu";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 
 export default function HeaderClient() {
   const pathname = usePathname();
   const { cartCount, toggleMiniCart } = useCart();
+  const { currency, setCurrency } = useCurrency();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
+  const currencyRef = useRef<HTMLDivElement>(null);
 
   const getLinkClass = (path: string, isMobile = false) => {
     const isActive = pathname === path;
@@ -30,6 +34,7 @@ export default function HeaderClient() {
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (!navRef.current?.contains(e.target as Node)) setOpenMenu(null);
+      if (!currencyRef.current?.contains(e.target as Node)) setCurrencyOpen(false);
     }
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
@@ -57,8 +62,30 @@ export default function HeaderClient() {
               <FaInstagram className="h-4 w-4" />
             </Link>
             <span className="mx-2 h-5 w-px bg-white/30" />
-            <button className="typo-small inline-flex items-center gap-1">Eng <span aria-hidden="true">▾</span></button>
-            <button className="typo-small inline-flex items-center gap-1">USD <span aria-hidden="true">▾</span></button>
+            <div className="relative" ref={currencyRef}>
+              <button 
+                className="typo-small inline-flex items-center gap-1"
+                onClick={() => setCurrencyOpen(!currencyOpen)}
+              >
+                {currency} <span aria-hidden="true">▾</span>
+              </button>
+              {currencyOpen && (
+                <div className="absolute right-0 top-full mt-2 w-20 rounded-md bg-white shadow-lg ring-1 ring-black/5 z-50 text-neutral-900">
+                  <button 
+                    className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-50 ${currency === "CAD" ? "font-bold bg-neutral-50" : ""}`}
+                    onClick={() => { setCurrency("CAD"); setCurrencyOpen(false); }}
+                  >
+                    CAD
+                  </button>
+                  <button 
+                    className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-50 ${currency === "USD" ? "font-bold bg-neutral-50" : ""}`}
+                    onClick={() => { setCurrency("USD"); setCurrencyOpen(false); }}
+                  >
+                    USD
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

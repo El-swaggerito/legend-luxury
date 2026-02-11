@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -7,6 +8,7 @@ import { LuChevronLeft } from "react-icons/lu";
 import OrderSummary from "./components/OrderSummary";
 import ShippingForm from "./components/ShippingForm";
 import PaymentSection from "./components/PaymentSection";
+import PaymentSuccessModal from "./components/PaymentSuccessModal";
 import { useCart } from "../context/CartContext";
 
 const checkoutSchema = z.object({
@@ -23,7 +25,9 @@ const checkoutSchema = z.object({
 });
 
 export default function CheckoutPage() {
-  const { items, total } = useCart();
+  const { items, total, clear } = useCart();
+  const [showSuccess, setShowSuccess] = useState(false);
+  
   const methods = useForm({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -36,7 +40,12 @@ export default function CheckoutPage() {
     // Proceed to payment processing
   };
 
-  if (items.length === 0) {
+  const handleSuccess = () => {
+    setShowSuccess(true);
+    clear(); // Clear cart on success
+  };
+
+  if (items.length === 0 && !showSuccess) {
     return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
             <h1 className="text-2xl font-bold font-serif mb-4">Your cart is empty</h1>
@@ -83,7 +92,7 @@ export default function CheckoutPage() {
                 <ShippingForm />
 
                 {/* Payment Section */}
-                <PaymentSection total={total * 1.08 + 10} />
+                <PaymentSection total={total * 1.08 + 10} onSuccess={handleSuccess} />
                 
               </form>
             </FormProvider>
@@ -97,6 +106,12 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+      
+      <PaymentSuccessModal 
+        isOpen={showSuccess} 
+        onClose={() => setShowSuccess(false)}
+        amount={total * 1.08 + 10}
+      />
     </div>
   );
 }

@@ -2,11 +2,13 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 export default function MiniCartDrawer() {
   const router = useRouter();
   const { miniCartOpen, toggleMiniCart, items, total, updateQty, removeItem, clear } =
     useCart();
+  const { formatPrice } = useCurrency();
 
   return (
     <>
@@ -53,7 +55,7 @@ export default function MiniCartDrawer() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-sm font-semibold text-black">{i.title}</p>
-                      <p className="text-xs text-black font-medium">${i.price.toFixed(2)}</p>
+                      <p className="text-xs text-black font-medium">{formatPrice(i.price)}</p>
                     </div>
                     <button
                       onClick={() => removeItem(i.id)}
@@ -86,7 +88,7 @@ export default function MiniCartDrawer() {
       <div className="border-t border-neutral-200 px-4 py-4 pb-8">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-black">Subtotal</span>
-          <span className="text-lg font-bold text-black">${total.toFixed(2)}</span>
+          <span className="text-lg font-bold text-black">{formatPrice(total)}</span>
         </div>
         <div className="mt-3 flex gap-2">
           <button

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CharmOverlay from "./CharmOverlay";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 import { RECOMMENDED_PRODUCTS, Badge } from "../data/static-products";
 
@@ -40,6 +41,7 @@ export default function RecommendedGrid({
   filters?: Record<string, string | string[]>;
 }) {
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
 
   const filteredProducts = RECOMMENDED_PRODUCTS.filter((p) => {
     // Category Filter
@@ -118,9 +120,9 @@ export default function RecommendedGrid({
               </div>
               <div className="mt-3 flex items-center justify-between">
                 <div>
-                  <div className="typo-base font-bold text-neutral-900">${c.price.toFixed(2)}</div>
+                  <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>
                   {c.originalPrice && (
-                    <div className="typo-small text-neutral-400 line-through">${c.originalPrice.toFixed(2)}</div>
+                    <div className="typo-small text-neutral-400 line-through">{formatPrice(c.originalPrice)}</div>
                   )}
                 </div>
                 <button

@@ -1,9 +1,11 @@
 "use client";
 import Image from "next/image";
 import { useCart } from "../../context/CartContext";
+import { useCurrency } from "../../context/CurrencyContext";
 
 export default function OrderSummary() {
   const { items, total } = useCart();
+  const { formatPrice, currency } = useCurrency();
   const shipping = 10.0; // Flat rate for example
   const tax = total * 0.08; // Approx 8% tax
   const finalTotal = total + shipping + tax;
@@ -31,11 +33,11 @@ export default function OrderSummary() {
               </div>
               <div className="flex flex-1 flex-col justify-center">
                 <h3 className="text-sm font-medium text-neutral-900 line-clamp-2">{item.title}</h3>
-                <p className="text-sm text-neutral-500">${item.price.toFixed(2)}</p>
+                <p className="text-sm text-neutral-500">{formatPrice(item.price)}</p>
               </div>
               <div className="flex flex-col justify-center text-right">
                 <p className="text-sm font-semibold text-neutral-900">
-                  ${(item.price * item.qty).toFixed(2)}
+                  {formatPrice(item.price * item.qty)}
                 </p>
               </div>
             </li>
@@ -46,15 +48,15 @@ export default function OrderSummary() {
       <div className="space-y-3 border-t border-neutral-200 pt-6 text-sm text-neutral-600">
         <div className="flex justify-between">
           <span>Subtotal</span>
-          <span className="font-medium text-neutral-900">${total.toFixed(2)}</span>
+          <span className="font-medium text-neutral-900">{formatPrice(total)}</span>
         </div>
         <div className="flex justify-between">
           <span>Shipping</span>
-          <span className="font-medium text-neutral-900">${shipping.toFixed(2)}</span>
+          <span className="font-medium text-neutral-900">{formatPrice(shipping)}</span>
         </div>
         <div className="flex justify-between">
           <span>Estimated Tax</span>
-          <span className="font-medium text-neutral-900">${tax.toFixed(2)}</span>
+          <span className="font-medium text-neutral-900">{formatPrice(tax)}</span>
         </div>
       </div>
 
@@ -62,8 +64,8 @@ export default function OrderSummary() {
         <div className="flex items-center justify-between">
           <span className="text-lg font-bold text-neutral-900">Total</span>
           <div className="text-right">
-            <span className="text-sm text-neutral-500 mr-2">USD</span>
-            <span className="text-2xl font-bold text-accent-600">${finalTotal.toFixed(2)}</span>
+            <span className="text-sm text-neutral-500 mr-2">{currency}</span>
+            <span className="text-2xl font-bold text-accent-600">{formatPrice(finalTotal)}</span>
           </div>
         </div>
       </div>
