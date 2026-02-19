@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { useCurrency } from "../context/CurrencyContext";
+import { useAuth } from "../context/AuthContext";
 import { LuShoppingCart, LuHeart, LuUser, LuMenu, LuX } from "react-icons/lu";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 
@@ -12,6 +13,7 @@ export default function HeaderClient() {
   const pathname = usePathname();
   const { cartCount, toggleMiniCart } = useCart();
   const { currency, setCurrency } = useCurrency();
+  const { user } = useAuth();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currencyOpen, setCurrencyOpen] = useState(false);
@@ -136,23 +138,22 @@ export default function HeaderClient() {
               {cartCount}
             </span>
           </button>
-          <button
-            className="hidden sm:block rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600"
-            aria-label="Wishlist"
+          <Link href="/wishlist" className="hidden sm:block rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600" aria-label="Wishlist">
+            <LuHeart className="h-6 w-6" />
+          </Link>
+          <Link 
+            href={user ? "/profile" : "/login"}
+            className="hidden sm:block rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600" 
+            aria-label={user ? "Account" : "Sign In"}
           >
-            <Link href="/wishlist">
-              <LuHeart className="h-6 w-6" />
-            </Link>
-          </button>
-          <button className="hidden sm:block rounded-full p-2 text-accent-600 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-accent-600" aria-label="Account">
             <LuUser className="h-6 w-6" />
-          </button>
+          </Link>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 lg:hidden" onClick={() => setMobileMenuOpen(false)} />
+        <div className="fixed inset-0 z-50 bg-black/50 lg:hidden cursor-pointer" onClick={() => setMobileMenuOpen(false)} />
       )}
 
       {/* Mobile Menu Drawer */}
@@ -185,9 +186,9 @@ export default function HeaderClient() {
           <Link href="/wishlist" className="flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium text-neutral-800 hover:bg-neutral-50">
             <LuHeart className="h-5 w-5 text-accent-600" /> Wishlist
           </Link>
-          <button className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium text-neutral-800 hover:bg-neutral-50 text-left">
-            <LuUser className="h-5 w-5 text-accent-600" /> Account
-          </button>
+          <Link href={user ? "/profile" : "/login"} className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium text-neutral-800 hover:bg-neutral-50 text-left">
+            <LuUser className="h-5 w-5 text-accent-600" /> {user ? "Account" : "Sign In"}
+          </Link>
         </nav>
       </div>
     </header>

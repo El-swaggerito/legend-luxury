@@ -1,132 +1,113 @@
 "use client";
 import { useFormContext } from "react-hook-form";
+import Input from "../../components/ui/Input";
+import { LuUser, LuMapPin, LuBuilding, LuGlobe, LuPhone } from "react-icons/lu";
 
 export default function ShippingForm() {
   const { register, formState: { errors } } = useFormContext();
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold font-serif text-neutral-900">Shipping Address</h2>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center gap-3 border-b border-neutral-100 pb-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-50 text-accent-600">
+          <LuMapPin className="h-5 w-5" />
+        </div>
+        <h2 className="text-xl font-bold font-serif text-neutral-900">Shipping Address</h2>
+      </div>
       
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <label htmlFor="firstName" className="text-sm font-medium text-neutral-700">First Name</label>
-          <input
-            {...register("firstName")}
-            id="firstName"
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-            placeholder="John"
-          />
-          {errors.firstName && (
-            <p className="text-xs text-red-500">{errors.firstName.message as string}</p>
-          )}
-        </div>
+        <Input
+          {...register("firstName")}
+          id="firstName"
+          label="First Name"
+          startIcon={<LuUser className="h-5 w-5" />}
+          status={errors.firstName ? "error" : "default"}
+          help={errors.firstName?.message as string}
+        />
         
-        <div className="space-y-2">
-          <label htmlFor="lastName" className="text-sm font-medium text-neutral-700">Last Name</label>
-          <input
-            {...register("lastName")}
-            id="lastName"
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-            placeholder="Doe"
-          />
-          {errors.lastName && (
-            <p className="text-xs text-red-500">{errors.lastName.message as string}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="address" className="text-sm font-medium text-neutral-700">Street Address</label>
-        <input
-          {...register("address")}
-          id="address"
-          className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-          placeholder="123 Main St"
-        />
-        {errors.address && (
-          <p className="text-xs text-red-500">{errors.address.message as string}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="apartment" className="text-sm font-medium text-neutral-700">Apartment, suite, etc. (optional)</label>
-        <input
-          {...register("apartment")}
-          id="apartment"
-          className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-          placeholder="Apt 4B"
+        <Input
+          {...register("lastName")}
+          id="lastName"
+          label="Last Name"
+          startIcon={<LuUser className="h-5 w-5" />}
+          status={errors.lastName ? "error" : "default"}
+          help={errors.lastName?.message as string}
         />
       </div>
+
+      <Input
+        {...register("address")}
+        id="address"
+        label="Street Address"
+        startIcon={<LuMapPin className="h-5 w-5" />}
+        status={errors.address ? "error" : "default"}
+        help={errors.address?.message as string}
+      />
+
+      <Input
+        {...register("apartment")}
+        id="apartment"
+        label="Apartment, suite, etc. (optional)"
+        startIcon={<LuBuilding className="h-5 w-5" />}
+      />
 
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="space-y-2">
-          <label htmlFor="city" className="text-sm font-medium text-neutral-700">City</label>
-          <input
-            {...register("city")}
-            id="city"
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-            placeholder="New York"
-          />
-          {errors.city && (
-            <p className="text-xs text-red-500">{errors.city.message as string}</p>
-          )}
-        </div>
+        <Input
+          {...register("city")}
+          id="city"
+          label="City"
+          status={errors.city ? "error" : "default"}
+          help={errors.city?.message as string}
+        />
         
-        <div className="space-y-2">
-          <label htmlFor="state" className="text-sm font-medium text-neutral-700">State / Province</label>
-          <input
-            {...register("state")}
-            id="state"
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-            placeholder="NY"
-          />
-          {errors.state && (
-            <p className="text-xs text-red-500">{errors.state.message as string}</p>
-          )}
-        </div>
+        <Input
+          {...register("state")}
+          id="state"
+          label="State / Province"
+          status={errors.state ? "error" : "default"}
+          help={errors.state?.message as string}
+        />
 
-        <div className="space-y-2">
-          <label htmlFor="zip" className="text-sm font-medium text-neutral-700">Postal Code</label>
-          <input
-            {...register("zip")}
-            id="zip"
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-            placeholder="10001"
-          />
-          {errors.zip && (
-            <p className="text-xs text-red-500">{errors.zip.message as string}</p>
-          )}
-        </div>
+        <Input
+          {...register("zip")}
+          id="zip"
+          label="Postal Code"
+          status={errors.zip ? "error" : "default"}
+          help={errors.zip?.message as string}
+        />
       </div>
       
-      <div className="space-y-2">
-        <label htmlFor="country" className="text-sm font-medium text-neutral-700">Country</label>
+      <div className="relative">
         <select
             {...register("country")}
             id="country"
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all bg-white"
+            className="peer block w-full rounded-xl border border-neutral-200 bg-white px-4 pb-2.5 pt-5 text-base leading-relaxed shadow-sm transition-all duration-200 ease-in-out focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-600 outline-none appearance-none"
         >
             <option value="US">United States</option>
             <option value="CA">Canada</option>
             <option value="UK">United Kingdom</option>
             <option value="AU">Australia</option>
         </select>
+        <label
+          htmlFor="country"
+          className="pointer-events-none absolute left-4 top-4 z-10 origin-[0] -translate-y-2.5 scale-75 transform text-sm text-neutral-500 duration-200"
+        >
+          Country
+        </label>
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500">
+          <LuGlobe className="h-5 w-5" />
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="phone" className="text-sm font-medium text-neutral-700">Phone</label>
-        <input
-          {...register("phone")}
-          id="phone"
-          type="tel"
-          className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-          placeholder="(555) 123-4567"
-        />
-        {errors.phone && (
-          <p className="text-xs text-red-500">{errors.phone.message as string}</p>
-        )}
-      </div>
+      <Input
+        {...register("phone")}
+        id="phone"
+        type="tel"
+        label="Phone Number"
+        startIcon={<LuPhone className="h-5 w-5" />}
+        status={errors.phone ? "error" : "default"}
+        help={errors.phone?.message as string}
+      />
     </div>
   );
 }

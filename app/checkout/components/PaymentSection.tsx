@@ -51,19 +51,22 @@ function StripeForm({ onSubmit }: { onSubmit: () => void }) {
 
   return (
     <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2">
-      <div className="rounded-lg border border-neutral-300 bg-white p-4 transition-all focus-within:border-accent-500 focus-within:ring-1 focus-within:ring-accent-500">
+      <div className="rounded-xl border border-neutral-200 bg-white p-4 transition-all focus-within:border-accent-600 focus-within:ring-1 focus-within:ring-accent-600 shadow-sm">
         <CardElement
           options={{
             style: {
               base: {
                 fontSize: "16px",
-                color: "#424770",
+                color: "#171717",
+                fontFamily: "var(--font-inter-tight), sans-serif",
                 "::placeholder": {
-                  color: "#aab7c4",
+                  color: "#a3a3a3",
                 },
+                iconColor: "#005691",
               },
               invalid: {
-                color: "#9e2146",
+                color: "#ef4444",
+                iconColor: "#ef4444",
               },
             },
           }}
@@ -106,10 +109,10 @@ export default function PaymentSection({ total, onSuccess }: { total: number; on
       
       <div className="grid gap-4 sm:grid-cols-2">
         <label
-          className={`relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-all ${
+          className={`relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-all shadow-sm ${
             method === "stripe"
-              ? "border-accent-600 bg-accent-50/50 ring-1 ring-accent-600"
-              : "border-neutral-200 bg-white hover:border-neutral-300"
+              ? "border-accent-600 bg-accent-50/50 ring-1 ring-accent-600 shadow-accent-100"
+              : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-md"
           }`}
         >
           <input
@@ -128,10 +131,10 @@ export default function PaymentSection({ total, onSuccess }: { total: number; on
         </label>
 
         <label
-          className={`relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-all ${
+          className={`relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-all shadow-sm ${
             method === "paypal"
-              ? "border-blue-500 bg-blue-50/50 ring-1 ring-blue-500"
-              : "border-neutral-200 bg-white hover:border-neutral-300"
+              ? "border-blue-500 bg-blue-50/50 ring-1 ring-blue-500 shadow-blue-100"
+              : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-md"
           }`}
         >
           <input

@@ -21,19 +21,29 @@ export default function VibeSection() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const handlePlayPause = () => {
+  const handlePlayPause = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (videoRef.current) {
-      if (playing) {
+      if (!videoRef.current.paused) {
         videoRef.current.pause();
-        setPlaying(false);
       } else {
-        videoRef.current.play().catch(() => {});
-        setPlaying(true);
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              // Playback started successfully
+            })
+            .catch((error) => {
+              console.log("Autoplay prevented or playback error:", error);
+              setPlaying(false);
+            });
+        }
       }
     }
   };
 
-  const handleMuteToggle = () => {
+  const handleMuteToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (videoRef.current) {
       videoRef.current.muted = !muted;
       setMuted(!muted);
@@ -51,6 +61,7 @@ export default function VibeSection() {
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     const seekTo = (parseFloat(e.target.value) / 100) * duration;
     if (videoRef.current) {
       videoRef.current.currentTime = seekTo;
@@ -58,7 +69,8 @@ export default function VibeSection() {
     }
   };
 
-  const handleFullscreen = () => {
+  const handleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!document.fullscreenElement) {
       playerContainerRef.current?.requestFullscreen();
       setIsFullscreen(true);
@@ -81,6 +93,15 @@ export default function VibeSection() {
   };
 
   useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -101,16 +122,54 @@ export default function VibeSection() {
       if (videoRef.current) {
         videoRef.current.play().catch(() => {});
         setPlaying(true);
+        // Scroll to video if not visible
+        playerContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     };
+    
+    // Keyboard controls
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle if video container has focus or is fullscreen
+      const isFocused = playerContainerRef.current?.contains(document.activeElement);
+      const isFs = document.fullscreenElement === playerContainerRef.current;
+      
+      if (!isFocused && !isFs) return;
+
+      switch(e.key) {
+        case " ": // Space
+        case "k":
+          e.preventDefault();
+          handlePlayPause();
+          break;
+        case "m":
+          e.preventDefault();
+          // Mock event for mute toggle
+          if (videoRef.current) {
+            videoRef.current.muted = !muted;
+            setMuted(!muted);
+          }
+          break;
+        case "f":
+          e.preventDefault();
+          if (!document.fullscreenElement) {
+            playerContainerRef.current?.requestFullscreen();
+          } else {
+            document.exitFullscreen();
+          }
+          break;
+      }
+    };
+
     window.addEventListener("play-showreel", handlePlayRequest);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("play-showreel", handlePlayRequest);
+      window.removeEventListener("keydown", handleKeyDown);
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     };
-  }, [playing]);
+  }, [playing, muted]);
 
   return (
     <section
@@ -128,9 +187,13 @@ export default function VibeSection() {
         <div className="mt-10 flex justify-center">
           <div 
             ref={playerContainerRef}
-            className="group relative w-full max-w-3xl overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-black/10 md:rotate-[2deg]"
+            className="group relative w-full max-w-3xl overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-black/10 md:rotate-[2deg] outline-none focus-visible:ring-4 focus-visible:ring-accent-500 cursor-pointer"
             onMouseMove={handleMouseMove}
             onMouseLeave={() => playing && setShowControls(false)}
+            onClick={handlePlayPause}
+            tabIndex={0}
+            role="region"
+            aria-label="Video Player"
           >
             {/* Main Video Layer */}
             <div className="relative aspect-[16/9]">
@@ -140,11 +203,11 @@ export default function VibeSection() {
                 src="https://res.cloudinary.com/dcs3xfpz0/video/upload/v1769848323/labgypmzqo4rfg07el4r.mp4"
                 playsInline
                 muted={muted}
-                onClick={handlePlayPause}
                 onTimeUpdate={handleTimeUpdate}
-                onEnded={() => setPlaying(false)}
+                loop
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
+                onError={(e) => console.error("Video error:", e)}
               >
                 Sorry, your browser doesn’t support embedded videos.
               </video>
@@ -167,6 +230,7 @@ export default function VibeSection() {
                 className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-4 pt-12 transition-opacity duration-300 ${
                   showControls || !playing ? "opacity-100" : "opacity-0"
                 }`}
+                onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex flex-col gap-2">
                   {/* Progress Bar */}

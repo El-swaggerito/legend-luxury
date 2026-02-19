@@ -14,7 +14,7 @@ export default function MiniCartDrawer() {
     <>
       {miniCartOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 transition-opacity"
+          className="fixed inset-0 z-40 bg-black/50 transition-opacity cursor-pointer"
           onClick={toggleMiniCart}
           aria-hidden="true"
         />

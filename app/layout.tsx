@@ -9,6 +9,7 @@ import { SearchProvider } from "./context/SearchContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { QuickViewProvider } from "./context/QuickViewContext";
 import { CurrencyProvider } from "./context/CurrencyContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const interTight = Inter_Tight({
   variable: "--font-inter-tight",
@@ -36,20 +37,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${interTight.variable} ${merriweather.variable} antialiased`}>
-        <CurrencyProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <QuickViewProvider>
-                <SearchProvider>
-                  <Header />
-                  {children}
-                  <Footer />
-                  <MiniCartDrawer />
-                </SearchProvider>
-              </QuickViewProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </CurrencyProvider>
+        <AuthProvider>
+          <CurrencyProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <QuickViewProvider>
+                  <SearchProvider>
+                    <Header />
+                    {children}
+                    <Footer />
+                    <MiniCartDrawer />
+                  </SearchProvider>
+                </QuickViewProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </CurrencyProvider>
+        </AuthProvider>
       </body>
     </html>
   );

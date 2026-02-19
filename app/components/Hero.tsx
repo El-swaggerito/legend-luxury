@@ -35,7 +35,7 @@ export default function Hero() {
             <span className="block">
               Express <span className="brush-underline">Yourself</span> with Custom-
             </span>
-            <span className="block mt-3">
+            <span className="block mt-6">
               <span className="highlight-blob highlight-green">Designed</span> Crocs and{" "}
               <span className="highlight-blob highlight-pink">Charms!</span>
             </span>
