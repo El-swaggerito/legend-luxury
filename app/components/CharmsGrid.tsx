@@ -14,6 +14,7 @@ type Charm = {
   category: string;
   price: number;
   badge?: "HOT" | "25% OFF" | "BEST DEALS" | "SALE";
+  variations?: Charm[];
 };
 
 type FilterChip = {
@@ -175,7 +176,13 @@ export default function CharmsGrid({
     // Internal Category Filter (CharmsFilterBar)
     if (active !== "All") {
       result = result.filter((c) => c.category === active);
-    } else if (distinctCategories) {
+    } 
+    
+    // Grouping Logic: Only show group leaders
+    // We identify the leader as the first item in the variations array (since we sorted them on the server)
+    result = result.filter(c => c.variations && c.variations.length > 0 && c.id === c.variations[0].id);
+
+    if (distinctCategories) {
       // Return only the first charm from each category
       const seen = new Set<string>();
       result = result.filter((c) => {
@@ -245,6 +252,20 @@ export default function CharmsGrid({
               <Link href={`/product/${c.id}`} className="block">
                 <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
               </Link>
+              
+              {c.variations && c.variations.length > 1 && (
+                <div className="mt-1 flex items-center gap-1">
+                  <div className="flex -space-x-1.5 overflow-hidden">
+                     {c.variations.slice(0, 3).map((v) => (
+                       <div key={v.id} className="relative inline-block h-4 w-4 rounded-full ring-1 ring-white">
+                         <Image src={v.img} alt="" fill className="rounded-full object-cover" sizes="16px" />
+                       </div>
+                     ))}
+                  </div>
+                  <span className="text-[10px] text-neutral-500 font-medium">+{c.variations.length - 1} styles</span>
+                </div>
+              )}
+
               <div className="mt-3 flex items-center justify-between">
                 <div>
                   <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>

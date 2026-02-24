@@ -7,6 +7,7 @@ export async function GET() {
     charms.sort((a, b) => a.title.localeCompare(b.title));
     return NextResponse.json({ charms });
   } catch (err) {
+    console.error("API Error /api/charms:", err);
     return NextResponse.json({ error: "Failed to enumerate charms" }, { status: 500 });
   }
 }

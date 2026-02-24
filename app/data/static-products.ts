@@ -1,7 +1,7 @@
 
 export type Badge = "HOT" | "25% OFF" | "BEST DEALS" | "SALE" | null;
 
-export type Product = {
+export interface Product {
   id: string;
   img: string;
   title: string;
@@ -12,7 +12,9 @@ export type Product = {
   reviews: number;
   category: string;
   description?: string;
-};
+  variations?: Product[];
+  groupId?: string;
+}
 
 export const RECOMMENDED_PRODUCTS: Product[] = [
   { 

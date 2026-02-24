@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { LuHeart, LuMinus, LuPlus, LuShare2, LuStar } from "react-icons/lu";
 import { useCart } from "../context/CartContext";
 import { useCurrency } from "../context/CurrencyContext";
@@ -133,37 +134,29 @@ export default function ProductView({ product }: { product: Product }) {
                 ))}
               </div>
             </div>
-          ) : (
+          ) : product.variations && product.variations.length > 1 ? (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="font-semibold text-neutral-900">Color</label>
+                <label className="font-semibold text-neutral-900">Variations</label>
               </div>
-              <div className="flex gap-3">
-                {["Default", "Gold", "Silver", "Rose Gold"].map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`group relative h-10 w-10 rounded-full border-2 transition-all ${
-                      selectedColor === color
+              <div className="flex flex-wrap gap-3">
+                {product.variations.map((v) => (
+                  <Link
+                    key={v.id}
+                    href={`/product/${v.id}`}
+                    className={`group relative h-16 w-16 rounded-lg border-2 overflow-hidden transition-all ${
+                      v.id === product.id
                         ? "border-accent-600 ring-2 ring-accent-100 ring-offset-2"
                         : "border-transparent hover:border-neutral-300"
                     }`}
-                    aria-label={`Select ${color}`}
-                    title={color}
+                    title={v.title}
                   >
-                    <span 
-                      className={`absolute inset-1 rounded-full shadow-sm ${
-                        color === "Default" ? "bg-gradient-to-br from-neutral-100 to-neutral-300" :
-                        color === "Gold" ? "bg-gradient-to-br from-yellow-300 to-yellow-500" :
-                        color === "Silver" ? "bg-gradient-to-br from-gray-200 to-gray-400" :
-                        "bg-gradient-to-br from-rose-200 to-rose-400"
-                      }`} 
-                    />
-                  </button>
+                    <Image src={v.img} alt={v.title} fill className="object-contain bg-neutral-50 p-1" sizes="64px" />
+                  </Link>
                 ))}
               </div>
             </div>
-          )}
+          ) : null}
 
           {/* Quantity & Add to Cart */}
           <div className="flex gap-4">
