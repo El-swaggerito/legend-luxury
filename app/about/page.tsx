@@ -7,9 +7,17 @@ export default function AboutPage() {
     <main>
       <section
         aria-label="About banner"
-        className="relative isolate overflow-hidden bg-gradient-to-b from-accent-600 to-accent-100"
+        className="relative isolate overflow-hidden min-h-[500px] flex items-center justify-center"
       >
-        <div className="mx-auto max-w-7xl px-4 py-16 md:py-24 text-center">
+        <Image
+          src="/images/Header.png"
+          alt="About Banner"
+          fill
+          priority
+          className="object-cover z-[-1]"
+        />
+        <div className="absolute inset-0 bg-black/30 z-[-1]" />
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-24 text-center z-10">
           <h1
             className="text-white"
             style={{ fontFamily: "var(--font-serif)" }}

@@ -1,13 +1,22 @@
 "use client";
 import { LuMapPin, LuMail, LuPhone } from "react-icons/lu";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section aria-label="Contact banner" className="relative isolate overflow-hidden bg-gradient-to-b from-accent-600 to-accent-100">
-        <div className="mx-auto max-w-7xl px-4 py-16 md:py-24 text-center">
+      <section aria-label="Contact banner" className="relative isolate overflow-hidden min-h-[500px] flex items-center justify-center">
+        <Image
+          src="/images/Header.png"
+          alt="Contact Banner"
+          fill
+          priority
+          className="object-cover z-[-1]"
+        />
+        <div className="absolute inset-0 bg-black/30 z-[-1]" />
+        <div className="mx-auto max-w-7xl px-4 py-16 md:py-24 text-center z-10">
           <h1 className="text-white" style={{ fontFamily: "var(--font-serif)" }}>
             <span className="text-[32px] md:text-[44px] font-medium">Contact Us</span>
           </h1>
