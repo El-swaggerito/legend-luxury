@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView, useAnimation } from 'framer-motion';
+import { motion, useInView, useAnimation, Variants } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 
 interface FadeInProps {
@@ -26,7 +26,7 @@ export default function FadeIn({
   const isInView = useInView(ref, { once: viewport?.once, margin: viewport?.margin as any });
   const controls = useAnimation();
 
-  const variants = {
+  const variants: Variants = {
     hidden: {
       opacity: 0,
       y: direction === 'up' ? 20 : direction === 'down' ? -20 : 0,
