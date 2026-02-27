@@ -6,6 +6,7 @@ import CharmsFilterBar, { FilterChip as FilterChipType } from "./CharmsFilterBar
 import CharmOverlay from "./CharmOverlay";
 import { useCart } from "../context/CartContext";
 import { useCurrency } from "../context/CurrencyContext";
+import StaggerContainer, { StaggerItem } from "./animations/StaggerContainer";
 
 type Charm = {
   id: string;
@@ -217,11 +218,12 @@ export default function CharmsGrid({
         </div>
       )}
 
-      <ul className={gridClassName}>
+      <StaggerContainer className={gridClassName} as="ul" staggerDelay={0.05}>
         {visible.map((c) => (
-          <li
+          <StaggerItem
+            as="li"
             key={c.id}
-            className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md animate-fade-in"
+            className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md"
           >
             <BadgeLabel badge={c.badge} />
             <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
@@ -285,18 +287,9 @@ export default function CharmsGrid({
                 </button>
               </div>
             </div>
-          </li>
+          </StaggerItem>
         ))}
-      </ul>
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.4s ease-out forwards;
-        }
-      `}</style>
+      </StaggerContainer>
     </section>
   );
 }

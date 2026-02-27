@@ -3,6 +3,7 @@ import Image from "next/image";
 import { products } from "../lib/products";
 import { useSearch } from "../context/SearchContext";
 import { useCart } from "../context/CartContext";
+import StaggerContainer, { StaggerItem } from "./animations/StaggerContainer";
 
 export default function ProductGrid() {
   const { query } = useSearch();
@@ -23,9 +24,13 @@ export default function ProductGrid() {
         <h2 className="heading-2 text-neutral-900">Recommended For You</h2>
         <p className="typo-small text-neutral-600">{filtered.length} items</p>
       </div>
-      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <StaggerContainer as="ul" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {filtered.map((p) => (
-          <li key={p.id} className="group rounded-xl border border-neutral-200 bg-white shadow-sm">
+          <StaggerItem
+            as="li"
+            key={p.id}
+            className="group rounded-xl border border-neutral-200 bg-white shadow-sm"
+          >
             <div className="relative aspect-square w-full overflow-hidden rounded-t-xl">
               <Image
                 src={p.image}
@@ -56,9 +61,9 @@ export default function ProductGrid() {
                 </button>
               </div>
             </div>
-          </li>
+          </StaggerItem>
         ))}
-      </ul>
+      </StaggerContainer>
     </section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import { LuPlay, LuPause, LuVolume2, LuVolumeX, LuMaximize, LuMinimize } from "react-icons/lu";
+import FadeIn from "./animations/FadeIn";
 
 export default function VibeSection() {
   const [playing, setPlaying] = useState(false);
@@ -179,12 +180,14 @@ export default function VibeSection() {
     >
       <div className="soft-gradient" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 md:py-24">
-        <h2 className="text-center text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]" style={{ fontFamily: "var(--font-serif)" }}>
-          <span className="block text-[28px] md:text-[36px] font-medium">Can you decode the</span>
-          <span className="block text-[28px] md:text-[36px] font-medium">Legend Luxury vibe?</span>
-        </h2>
+        <FadeIn>
+          <h2 className="text-center text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]" style={{ fontFamily: "var(--font-serif)" }}>
+            <span className="block text-[28px] md:text-[36px] font-medium">Can you decode the</span>
+            <span className="block text-[28px] md:text-[36px] font-medium">Legend Luxury vibe?</span>
+          </h2>
+        </FadeIn>
 
-        <div className="mt-10 flex justify-center">
+        <FadeIn delay={0.2} direction="up" className="mt-10 flex justify-center">
           <div 
             ref={playerContainerRef}
             className="group relative w-full max-w-3xl overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-black/10 md:rotate-[2deg] outline-none focus-visible:ring-4 focus-visible:ring-accent-500 cursor-pointer"
@@ -294,7 +297,7 @@ export default function VibeSection() {
               </div>
             </div>
           </div>
-        </div>
+        </FadeIn>
       </div>
 
       <div className="rainbow-band" aria-hidden="true" />
