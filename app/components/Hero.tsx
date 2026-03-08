@@ -1,5 +1,5 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "./animations/FadeIn";
@@ -17,16 +17,16 @@ export default function Hero() {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -150]);
 
   // Floating animations configuration
-  const floatingVariants = {
-    float: (i: number) => ({
+  const floatingVariants: Variants = {
+    float: (custom: number) => ({
       y: [0, -15, 0],
-      x: [0, i % 2 === 0 ? 10 : -10, 0],
-      rotate: [0, i % 2 === 0 ? 5 : -5, 0],
+      x: [0, custom % 2 === 0 ? 10 : -10, 0],
+      rotate: [0, custom % 2 === 0 ? 5 : -5, 0],
       transition: {
-        duration: 4 + (i % 3),
+        duration: 4 + (custom % 3),
         repeat: Infinity,
-        ease: "easeInOut",
-        delay: i * 0.5,
+        ease: [0.25, 0.25, 0.25, 0.75],
+        delay: custom * 0.5,
       },
     }),
   };
@@ -170,4 +170,3 @@ export default function Hero() {
     </section>
   );
 }
-

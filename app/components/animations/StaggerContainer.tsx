@@ -68,10 +68,10 @@ export const staggerItem: Variants = {
   },
 };
 
-export function StaggerItem({ children, className = '', as = 'div' }: { children: React.ReactNode, className?: string, as?: 'div' | 'li' }) {
+export function StaggerItem({ children, className = '', style, as = 'div' }: { children: React.ReactNode, className?: string, style?: React.CSSProperties, as?: 'div' | 'li' }) {
   const Component = motion[as] as any;
   return (
-    <Component variants={staggerItem} className={className}>
+    <Component variants={staggerItem} className={className} style={style}>
       {children}
     </Component>
   );
