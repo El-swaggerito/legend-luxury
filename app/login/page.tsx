@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import Input from "../components/ui/Input";
-import { LuMail, LuLock, LuArrowRight } from "react-icons/lu";
+import { LuMail, LuLock, LuArrowRight, LuEye, LuEyeOff } from "react-icons/lu";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -21,6 +21,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
   const {
@@ -98,11 +99,21 @@ export default function LoginPage() {
               <div className="space-y-1">
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   label="Password"
                   startIcon={<LuLock className="h-5 w-5" />}
                   status={errors.password ? "error" : "default"}
                   help={errors.password?.message}
+                  endIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      aria-label="Toggle password visibility"
+                      className="text-neutral-400 hover:text-neutral-700"
+                    >
+                      {showPassword ? <LuEyeOff className="h-5 w-5" /> : <LuEye className="h-5 w-5" />}
+                    </button>
+                  }
                   {...register("password")}
                 />
                 <div className="flex justify-end">

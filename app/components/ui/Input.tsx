@@ -90,13 +90,16 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
           </div>
         )}
 
-        {endIcon || (status !== "default" && (
-          <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
+        {endIcon ? (
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-auto">
             {endIcon}
-            {!endIcon && status === "error" && <LuCircleX className="h-5 w-5 text-red-500" />}
-            {!endIcon && status === "success" && <LuCheck className="h-5 w-5 text-green-500" />}
           </div>
-        ))}
+        ) : status !== "default" ? (
+          <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
+            {status === "error" && <LuCircleX className="h-5 w-5 text-red-500" />}
+            {status === "success" && <LuCheck className="h-5 w-5 text-green-500" />}
+          </div>
+        ) : null}
       </div>
 
       {help && (
@@ -114,4 +117,3 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
 });
 
 export default Input;
-

@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import Input from "../components/ui/Input";
-import { LuUser, LuMail, LuLock, LuArrowRight, LuCircleCheck } from "react-icons/lu";
+import { LuUser, LuMail, LuLock, LuArrowRight, LuCircleCheck, LuEye, LuEyeOff } from "react-icons/lu";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -29,6 +29,8 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
   const {
@@ -142,21 +144,41 @@ export default function RegisterPage() {
 
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 label="Password"
                 startIcon={<LuLock className="h-5 w-5" />}
                 status={errors.password ? "error" : "default"}
                 help={errors.password?.message}
+                endIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label="Toggle password visibility"
+                    className="text-neutral-400 hover:text-neutral-700"
+                  >
+                    {showPassword ? <LuEyeOff className="h-5 w-5" /> : <LuEye className="h-5 w-5" />}
+                  </button>
+                }
                 {...register("password")}
               />
 
               <Input
                 id="confirmPassword"
-                type="password"
+                type={showConfirm ? "text" : "password"}
                 label="Confirm Password"
                 startIcon={<LuLock className="h-5 w-5" />}
                 status={errors.confirmPassword ? "error" : "default"}
                 help={errors.confirmPassword?.message}
+                endIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm((v) => !v)}
+                    aria-label="Toggle confirm password visibility"
+                    className="text-neutral-400 hover:text-neutral-700"
+                  >
+                    {showConfirm ? <LuEyeOff className="h-5 w-5" /> : <LuEye className="h-5 w-5" />}
+                  </button>
+                }
                 {...register("confirmPassword")}
               />
             </div>
