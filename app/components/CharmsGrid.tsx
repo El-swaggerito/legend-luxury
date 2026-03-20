@@ -202,94 +202,96 @@ export default function CharmsGrid({
   if (visible.length === 0) return null;
 
   return (
-    <section aria-label="Recommended Charms" className={`mx-auto max-w-7xl bg-white px-4 py-12 ${className}`}>
-      <h2 className="mb-6 text-center text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>
-        <span className="text-[28px] md:text-[32px] font-medium">Recommended Charms</span>
-      </h2>
+    <section aria-label="Recommended Charms" className={`w-full bg-white px-4 py-12 ${className}`}>
+      <div className="mx-auto max-w-7xl">
+        <h2 className="mb-6 text-center text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>
+          <span className="text-[28px] md:text-[32px] font-medium">Recommended Charms</span>
+        </h2>
 
-      {!hideFilters && (
-        <div className="mb-6 -mx-4">
-          <CharmsFilterBar
-            filters={filtersList as FilterChipType[]}
-            active={active}
-            onSelect={(key) => setActive(key)}
-            className="mx-4"
-          />
-        </div>
-      )}
+        {!hideFilters && (
+          <div className="mb-6 -mx-4">
+            <CharmsFilterBar
+              filters={filtersList as FilterChipType[]}
+              active={active}
+              onSelect={(key) => setActive(key)}
+              className="mx-4"
+            />
+          </div>
+        )}
 
-      <StaggerContainer className={gridClassName} as="ul" staggerDelay={0.05}>
-        {visible.map((c) => (
-          <StaggerItem
-            as="li"
-            key={c.id}
-            className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md"
-          >
-            <BadgeLabel badge={c.badge} />
-            <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
-              <Link href={`/product/${c.id}`} className="block w-full h-full">
-                <Image
-                  src={c.img}
-                  alt={c.title}
-                  fill
-                  className="object-contain transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
+        <StaggerContainer className={gridClassName} as="ul" staggerDelay={0.05}>
+          {visible.map((c) => (
+            <StaggerItem
+              as="li"
+              key={c.id}
+              className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md"
+            >
+              <BadgeLabel badge={c.badge} />
+              <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
+                <Link href={`/product/${c.id}`} className="block w-full h-full">
+                  <Image
+                    src={c.img}
+                    alt={c.title}
+                    fill
+                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
+                  />
+                </Link>
+                <CharmOverlay
+                  product={{
+                    id: c.id,
+                    title: c.title,
+                    price: c.price,
+                    image: c.img,
+                    category: c.category,
+                  }}
                 />
-              </Link>
-              <CharmOverlay
-                product={{
-                  id: c.id,
-                  title: c.title,
-                  price: c.price,
-                  image: c.img,
-                  category: c.category,
-                }}
-              />
-            </div>
-            <div className="mt-3 px-1">
-              <div className="flex items-center gap-1 text-warning-500">
-                <span aria-hidden="true">★★★★★</span>
-                <span className="typo-small text-neutral-500">(738)</span>
               </div>
-              <Link href={`/product/${c.id}`} className="block">
-                <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
-              </Link>
-              
-              {c.variations && c.variations.length > 1 && (
-                <div className="mt-1 flex items-center gap-1">
-                  <div className="flex -space-x-1.5 overflow-hidden">
-                     {c.variations.slice(0, 3).map((v) => (
-                       <div key={v.id} className="relative inline-block h-4 w-4 rounded-full ring-1 ring-white">
-                         <Image src={v.img} alt="" fill className="rounded-full object-cover" sizes="16px" />
-                       </div>
-                     ))}
+              <div className="mt-3 px-1">
+                <div className="flex items-center gap-1 text-warning-500">
+                  <span aria-hidden="true">★★★★★</span>
+                  <span className="typo-small text-neutral-500">(738)</span>
+                </div>
+                <Link href={`/product/${c.id}`} className="block">
+                  <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
+                </Link>
+                
+                {c.variations && c.variations.length > 1 && (
+                  <div className="mt-1 flex items-center gap-1">
+                    <div className="flex -space-x-1.5 overflow-hidden">
+                       {c.variations.slice(0, 3).map((v) => (
+                         <div key={v.id} className="relative inline-block h-4 w-4 rounded-full ring-1 ring-white">
+                           <Image src={v.img} alt="" fill className="rounded-full object-cover" sizes="16px" />
+                         </div>
+                       ))}
+                    </div>
+                    <span className="text-[10px] text-neutral-500 font-medium">+{c.variations.length - 1} styles</span>
                   </div>
-                  <span className="text-[10px] text-neutral-500 font-medium">+{c.variations.length - 1} styles</span>
-                </div>
-              )}
+                )}
 
-              <div className="mt-3 flex items-center justify-between">
-                <div>
-                  <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>
+                <div className="mt-3 flex items-center justify-between">
+                  <div>
+                    <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>
+                  </div>
+                  <button
+                    onClick={() =>
+                      addItem({
+                        id: c.id,
+                        title: c.title,
+                        price: c.price,
+                        image: c.img,
+                      })
+                    }
+                    className="rounded-full bg-accent-600 px-4 py-2 typo-small font-semibold text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-600 transition-transform active:scale-95"
+                  >
+                    Buy Now
+                  </button>
                 </div>
-                <button
-                  onClick={() =>
-                    addItem({
-                      id: c.id,
-                      title: c.title,
-                      price: c.price,
-                      image: c.img,
-                    })
-                  }
-                  className="rounded-full bg-accent-600 px-4 py-2 typo-small font-semibold text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-600 transition-transform active:scale-95"
-                >
-                  Buy Now
-                </button>
               </div>
-            </div>
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </div>
     </section>
   );
 }

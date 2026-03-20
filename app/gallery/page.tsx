@@ -36,38 +36,42 @@ export default function GalleryPage() {
         <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-white to-transparent" aria-hidden="true" />
       </section>
 
-      <section aria-label="Gallery grid" className="mx-auto max-w-7xl bg-white px-4 py-10">
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((p, idx) => {
-            const isTall = idx % 4 === 0 || idx % 4 === 2;
-            return (
-              <li key={p.src} className="product-card border-neutral-200">
-                <figure className={`product-image ${isTall ? "tall" : "short"}`}>
-                  <Image
-                    src={p.src}
-                    alt={p.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width:640px) 90vw, (max-width:1024px) 45vw, 22vw"
-                    priority={idx < 4}
-                  />
-                </figure>
-                <div className="product-content">
-                  <h3 className="product-title typo-base">{p.title}</h3>
-                  <p className="product-subtitle typo-base">{p.subtitle}</p>
-                  <div className="product-rating">
-                    <span className="stars" aria-hidden="true">★★★★★</span>
-                    <span className="value">{p.rating.split("/")[0].trim()}</span>
-                    <span className="reviews">{"/ " + p.rating.split("/")[1].trim()}</span>
+      <section aria-label="Gallery grid" className="w-full bg-white px-4 py-10">
+        <div className="mx-auto max-w-7xl">
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((p, idx) => {
+              const isTall = idx % 4 === 0 || idx % 4 === 2;
+              return (
+                <li key={p.src} className="product-card border-neutral-200">
+                  <figure className={`product-image ${isTall ? "tall" : "short"}`}>
+                    <Image
+                      src={p.src}
+                      alt={p.alt}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width:640px) 90vw, (max-width:1024px) 45vw, 22vw"
+                      priority={idx < 4}
+                    />
+                  </figure>
+                  <div className="product-content">
+                    <h3 className="product-title typo-base">{p.title}</h3>
+                    <p className="product-subtitle typo-base">{p.subtitle}</p>
+                    <div className="product-rating">
+                      <span className="stars" aria-hidden="true">★★★★★</span>
+                      <span className="value">{p.rating.split("/")[0].trim()}</span>
+                      <span className="reviews">{"/ " + p.rating.split("/")[1].trim()}</span>
+                    </div>
                   </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </section>
-      <section aria-label="Gallery promo" className="mx-auto max-w-7xl bg-white px-4 pb-12">
-        <PromoCard />
+      <section aria-label="Gallery promo" className="w-full bg-white px-4 pb-12">
+        <div className="mx-auto max-w-7xl">
+          <PromoCard />
+        </div>
       </section>
     </main>
   );

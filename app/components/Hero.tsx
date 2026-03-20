@@ -127,7 +127,7 @@ export default function Hero() {
         </div>
 
         <FadeIn delay={0.6} direction="up" duration={0.8}>
-          <div className="mt-10 overflow-hidden relative">
+          <div className="mt-10 overflow-hidden relative w-screen left-1/2 -translate-x-1/2">
             <div className="flex gap-4 animate-scroll hover:pause-animation w-max">
               {[
                 { id: "card1", title: "summer festivals", img: "/images/ind blocks (1).png" },

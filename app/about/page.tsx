@@ -41,9 +41,9 @@ export default function AboutPage() {
 
       <section
         aria-label="Comfort meets style"
-        className="mx-auto max-w-7xl bg-white px-4 py-10"
+        className="w-full bg-white px-4 py-10"
       >
-        <div className="grid items-start gap-6 lg:grid-cols-2">
+        <div className="mx-auto max-w-7xl grid items-start gap-6 lg:grid-cols-2">
           <figure className="relative aspect-[4/3] w-full overflow-hidden rounded-xl shadow-md">
             <Image
               src="/images/where comfort meets style main.jpg"
@@ -108,9 +108,9 @@ export default function AboutPage() {
 
       <section
         aria-label="Our Story"
-        className="mx-auto max-w-7xl bg-white px-4 py-10"
+        className="w-full bg-white px-4 py-10"
       >
-        <div className="grid items-center gap-6 lg:grid-cols-2">
+        <div className="mx-auto max-w-7xl grid items-center gap-6 lg:grid-cols-2">
           <article>
             <h2
               className="heading-2 text-neutral-900"

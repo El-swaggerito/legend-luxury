@@ -77,74 +77,76 @@ export default function RecommendedGrid({
   }
 
   return (
-    <section aria-label="Recommended Crocs" className={`mx-auto max-w-7xl bg-white px-4 py-12 ${className}`}>
-      <h2 className="mb-8 text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>
-        <span className="text-[28px] md:text-[32px] font-medium">Recommended Crocs</span>
-      </h2>
-      <StaggerContainer as="ul" className="grid gap-4 grid-cols-1 min-[450px]:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-        {filteredProducts.map((c) => (
-          <StaggerItem
-            as="li"
-            key={c.id}
-            className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md"
-          >
-            <BadgeLabel badge={c.badge} />
-            <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
-              <Link href={`/product/${c.id}`} className="block w-full h-full">
-                <Image
-                  src={c.img}
-                  alt={c.title}
-                  fill
-                  className="object-contain transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
+    <section aria-label="Recommended Crocs" className={`w-full bg-white px-4 py-12 ${className}`}>
+      <div className="mx-auto max-w-7xl">
+        <h2 className="mb-8 text-center text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>
+          <span className="text-[28px] md:text-[32px] font-medium">Recommended Crocs</span>
+        </h2>
+        <StaggerContainer as="ul" className="grid gap-4 grid-cols-1 min-[450px]:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+          {filteredProducts.map((c) => (
+            <StaggerItem
+              as="li"
+              key={c.id}
+              className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md"
+            >
+              <BadgeLabel badge={c.badge} />
+              <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
+                <Link href={`/product/${c.id}`} className="block w-full h-full">
+                  <Image
+                    src={c.img}
+                    alt={c.title}
+                    fill
+                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
+                  />
+                </Link>
+                <CharmOverlay
+                  product={{
+                    id: c.id,
+                    title: c.title,
+                    price: c.price,
+                    image: c.img,
+                    category: c.category,
+                  }}
                 />
-              </Link>
-              <CharmOverlay
-                product={{
-                  id: c.id,
-                  title: c.title,
-                  price: c.price,
-                  image: c.img,
-                  category: c.category,
-                }}
-              />
-            </div>
-            <div className="mt-3 px-1">
-              <div className="flex items-center gap-1 text-warning-500">
-                <span aria-hidden="true">★★★★★</span>
-                <span className="typo-small text-neutral-500">({c.reviews})</span>
               </div>
-              <Link href={`/product/${c.id}`} className="block">
-                <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
-              </Link>
-              <div className="mt-2">
-                <ColorDots />
-              </div>
-              <div className="mt-3 flex items-center justify-between">
-                <div>
-                  <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>
-                  {c.originalPrice && (
-                    <div className="typo-small text-neutral-400 line-through">{formatPrice(c.originalPrice)}</div>
-                  )}
+              <div className="mt-3 px-1">
+                <div className="flex items-center gap-1 text-warning-500">
+                  <span aria-hidden="true">★★★★★</span>
+                  <span className="typo-small text-neutral-500">({c.reviews})</span>
                 </div>
-                <button
-                  onClick={() =>
-                    addItem({
-                      id: c.id,
-                      title: c.title,
-                      price: c.price,
-                      image: c.img,
-                    })
-                  }
-                  className="rounded-full bg-accent-600 px-4 py-2 typo-small font-semibold text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-600 transition-transform active:scale-95"
-                >
-                  Buy Now
-                </button>
+                <Link href={`/product/${c.id}`} className="block">
+                  <p className="mt-1 clamp-2 typo-base font-semibold text-neutral-900 hover:text-accent-600 transition-colors">{c.title}</p>
+                </Link>
+                <div className="mt-2">
+                  <ColorDots />
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <div>
+                    <div className="typo-base font-bold text-neutral-900">{formatPrice(c.price)}</div>
+                    {c.originalPrice && (
+                      <div className="typo-small text-neutral-400 line-through">{formatPrice(c.originalPrice)}</div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() =>
+                      addItem({
+                        id: c.id,
+                        title: c.title,
+                        price: c.price,
+                        image: c.img,
+                      })
+                    }
+                    className="rounded-full bg-accent-600 px-4 py-2 typo-small font-semibold text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-600 transition-transform active:scale-95"
+                  >
+                    Buy Now
+                  </button>
+                </div>
               </div>
-            </div>
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </div>
     </section>
   );
 }

@@ -33,8 +33,8 @@ export default function ShopPage() {
         <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-white to-transparent" aria-hidden="true" />
       </section>
 
-      <section aria-label="Shop content" className="mx-auto max-w-7xl bg-white px-4 py-10">
-        <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+      <section aria-label="Shop content" className="w-full bg-white px-4 py-10">
+        <div className="mx-auto max-w-7xl grid items-start gap-6 lg:grid-cols-[280px_1fr]">
           <FilterPanel
             className="min-w-0"
             onChange={(state) => setFilters(state)}
@@ -84,4 +84,3 @@ export default function ShopPage() {
     </main>
   );
 }
-
