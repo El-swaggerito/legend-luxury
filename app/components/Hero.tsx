@@ -97,12 +97,25 @@ export default function Hero() {
         <div className="mx-auto max-w-3xl text-center">
           <FadeIn>
             <h1 className="heading-1 text-neutral-900 font-bold leading-[1.1] md:text-[56px] md:leading-[1.05]">
-              <span className="block">
-                Express <span className="brush-underline">Yourself</span> with Custom-
+              <span className="flex flex-col items-center gap-2 sm:hidden">
+                <span className="block">Express</span>
+                <span className="block brush-underline">Yourself</span>
+                <span className="block">with</span>
+                <span className="block">Custom-</span>
+                <span className="block highlight-blob highlight-green">Designed</span>
+                <span className="block">Crocs</span>
+                <span className="block">and</span>
+                <span className="block highlight-blob highlight-pink">Charms!</span>
               </span>
-              <span className="block mt-6">
-                <span className="highlight-blob highlight-green">Designed</span> Crocs and{" "}
-                <span className="highlight-blob highlight-pink">Charms!</span>
+
+              <span className="hidden sm:block">
+                <span className="block">
+                  Express <span className="brush-underline">Yourself</span> with Custom-
+                </span>
+                <span className="block sm:mt-6">
+                  <span className="highlight-blob highlight-green">Designed</span> Crocs and{" "}
+                  <span className="highlight-blob highlight-pink">Charms!</span>
+                </span>
               </span>
             </h1>
           </FadeIn>
