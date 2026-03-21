@@ -71,17 +71,17 @@ export default function OrderDetails({ onBack }: OrderDetailsProps) {
     products: [
       {
         id: 1,
-        name: "Smartphone 5G",
-        price: 299.00,
+        name: "Black & Chain Crocs",
+        price: 100.00,
         qty: 2,
-        image: "/images/products/classic-black.svg" // Placeholder
+        image: "/images/products/black&chaincrocs.JPG"
       },
       {
         id: 2,
-        name: "Wireless Headphones",
-        price: 601.00,
+        name: "Dark Pink Crocs",
+        price: 100.00,
         qty: 1,
-        image: "/images/products/classic-white.svg" // Placeholder
+        image: "/images/products/darkpinkcrocs.JPG"
       }
     ],
     billingAddress: {

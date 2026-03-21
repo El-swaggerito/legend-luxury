@@ -87,7 +87,7 @@ export default function RecommendedGrid({
             <StaggerItem
               as="li"
               key={c.id}
-              className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md"
+              className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
               <BadgeLabel badge={c.badge} />
               <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
@@ -96,7 +96,7 @@ export default function RecommendedGrid({
                     src={c.img}
                     alt={c.title}
                     fill
-                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                    className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                     sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
                   />
                 </Link>

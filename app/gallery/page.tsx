@@ -1,17 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import PromoCard from "../components/PromoCard";
+import { RECOMMENDED_PRODUCTS } from "../data/static-products";
 
-const products: Array<{ src: string; alt: string; title: string; subtitle: string; rating: string }> = [
-  { src: "/images/img-placeholder.png", alt: "Croc Royale in black", title: "CROC ROYALE", subtitle: "The original and most popular Crocs.", rating: "5.0 / 94 reviews" },
-  { src: "/images/img-placeholder-1.png", alt: "Velvetstep crocs", title: "VELVETSTEP CROCS", subtitle: "Same comfort with added height.", rating: "5.0 / 94 reviews" },
-  { src: "/images/img-placeholder-2.png", alt: "Funkyfeet crocs", title: "FUNKYFEET CROCS", subtitle: "Warm and cozy with a fuzzy lining.", rating: "4.8 / 94 reviews" },
-  { src: "/images/img-placeholder-3.png", alt: "Galaxy crocs", title: "GALAXY CROCS", subtitle: "Rugged design with adjustable heel strap.", rating: "3.8 / 94 reviews" },
-  { src: "/images/img-placeholder-4.png", alt: "Charmd stickers pack", title: "CHARMD STICKERS", subtitle: "For instant DIYs.", rating: "5.0 / 94 reviews" },
-  { src: "/images/img-placeholder-5.png", alt: "Glowkicks crocs", title: "GLOWKICKS CROCS", subtitle: "Glow in the dark or neon styles.", rating: "5.0 / 94 reviews" },
-  { src: "/images/img-placeholder-6.png", alt: "Herofeet crocs", title: "HEROFET CROCS", subtitle: "Superhero-themed.", rating: "4.8 / 94 reviews" },
-  { src: "/images/img-placeholder-7.png", alt: "Melody fadel crocs", title: "MELODY FADEL", subtitle: "Loud UX Designer at Apple.", rating: "3.8 / 94 reviews" },
-];
+const products: Array<{ id: string; src: string; alt: string; title: string; subtitle: string; rating: string }> = [...RECOMMENDED_PRODUCTS, ...RECOMMENDED_PRODUCTS]
+  .slice(0, 8)
+  .map((p) => ({
+    id: p.id,
+    src: p.img,
+    alt: p.title,
+    title: p.title.toUpperCase(),
+    subtitle: "Classic comfort with a bold, clean look.",
+    rating: `${p.rating.toFixed(1)} / ${p.reviews} reviews`,
+  }));
 
 export default function GalleryPage() {
   return (
@@ -42,26 +43,32 @@ export default function GalleryPage() {
             {products.map((p, idx) => {
               const isTall = idx % 4 === 0 || idx % 4 === 2;
               return (
-                <li key={p.src} className="product-card border-neutral-200">
-                  <figure className={`product-image ${isTall ? "tall" : "short"}`}>
-                    <Image
-                      src={p.src}
-                      alt={p.alt}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width:640px) 90vw, (max-width:1024px) 45vw, 22vw"
-                      priority={idx < 4}
-                    />
-                  </figure>
-                  <div className="product-content">
-                    <h3 className="product-title typo-base">{p.title}</h3>
-                    <p className="product-subtitle typo-base">{p.subtitle}</p>
-                    <div className="product-rating">
-                      <span className="stars" aria-hidden="true">★★★★★</span>
-                      <span className="value">{p.rating.split("/")[0].trim()}</span>
-                      <span className="reviews">{"/ " + p.rating.split("/")[1].trim()}</span>
+                <li key={`${p.id}-${idx}`} className="product-card border-neutral-200">
+                  <Link
+                    href={`/product/${p.id}`}
+                    className="group block h-full transition-transform duration-300 ease-out hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-600"
+                    aria-label={`View ${p.alt}`}
+                  >
+                    <figure className={`product-image ${isTall ? "tall" : "short"}`}>
+                      <Image
+                        src={p.src}
+                        alt={p.alt}
+                        fill
+                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                        sizes="(max-width:640px) 90vw, (max-width:1024px) 45vw, 22vw"
+                        priority={idx < 4}
+                      />
+                    </figure>
+                    <div className="product-content">
+                      <h3 className="product-title typo-base">{p.title}</h3>
+                      <p className="product-subtitle typo-base">{p.subtitle}</p>
+                      <div className="product-rating">
+                        <span className="stars" aria-hidden="true">★★★★★</span>
+                        <span className="value">{p.rating.split("/")[0].trim()}</span>
+                        <span className="reviews">{"/ " + p.rating.split("/")[1].trim()}</span>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </li>
               );
             })}

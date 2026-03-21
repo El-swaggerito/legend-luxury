@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "./animations/FadeIn";
 import { useRef } from "react";
+import { RECOMMENDED_PRODUCTS } from "../data/static-products";
 
 export default function Hero() {
   const containerRef = useRef(null);
@@ -39,6 +40,9 @@ export default function Hero() {
       window.dispatchEvent(new CustomEvent("play-showreel"));
     }
   };
+
+  const heroProducts = RECOMMENDED_PRODUCTS.slice(0, 5);
+  const marqueeProducts = [...heroProducts, ...heroProducts];
 
   return (
     <section ref={containerRef} aria-label="Promotions" className="relative isolate overflow-hidden bg-white">
@@ -142,27 +146,23 @@ export default function Hero() {
         <FadeIn delay={0.6} direction="up" duration={0.8}>
           <div className="mt-10 overflow-hidden relative w-screen left-1/2 -translate-x-1/2">
             <div className="flex gap-4 animate-scroll hover:pause-animation w-max">
-              {[
-                { id: "card1", title: "summer festivals", img: "/images/ind blocks (1).png" },
-                { id: "card2", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
-                { id: "card3", title: "summer festivals", img: "/images/ind blocks (3).png" },
-                { id: "card4", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
-                { id: "card5", title: "summer festivals", img: "/images/ind blocks (1).png" },
-                // Duplicates for seamless loop
-                { id: "card1-dup", title: "summer festivals", img: "/images/ind blocks (1).png" },
-                { id: "card2-dup", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
-                { id: "card3-dup", title: "summer festivals", img: "/images/ind blocks (3).png" },
-                { id: "card4-dup", title: "Glowstep Nights", img: "/images/ind blocks (2).png" },
-                { id: "card5-dup", title: "summer festivals", img: "/images/ind blocks (1).png" }
-              ].map((c) => (
-                <div key={c.id} className="relative w-64 flex-none overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition-transform hover:scale-[1.02]">
-                  <div className="absolute left-3 top-3 z-10 rounded-full bg-neutral-900/80 px-2 py-1 typo-small text-white">
-                    {c.title}
-                  </div>
+              {marqueeProducts.map((p, idx) => (
+                <motion.div
+                  key={`${p.id}-${idx}`}
+                  whileHover={{ y: -6, scale: 1.03 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                  className="group relative w-64 flex-none overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
+                >
                   <div className="relative aspect-[4/3] w-full">
-                    <Image src={c.img} alt={c.title} fill className="object-cover" sizes="256px" />
+                    <Image
+                      src={p.img}
+                      alt={p.title}
+                      fill
+                      className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                      sizes="256px"
+                    />
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
