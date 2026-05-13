@@ -28,7 +28,7 @@ const CROCS_IMAGE_FILES = [
 function fileStem(file: string) {
   return file.replace(/\.[^.]+$/, "");
 }
-
+ 
 function formatCrocsTitle(file: string) {
   let base = fileStem(file);
   base = base.replace(/cros$/i, "crocs");
