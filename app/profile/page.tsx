@@ -12,6 +12,8 @@ import OrderDetails from "./components/OrderDetails";
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [orders, setOrders] = useState<any[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
 
@@ -22,6 +24,7 @@ export default function ProfilePage() {
       // Simulate fetching user data
       const timer = setTimeout(() => {
         setLoading(false);
+      fetch("/api/orders").then(r=>r.json()).then(d=>setOrders(d.orders??[]));
       }, 800);
       return () => clearTimeout(timer);
     }
@@ -168,16 +171,17 @@ export default function ProfilePage() {
                         </button>
                       </div>
                       <div className="space-y-4">
-                        {[1, 2].map((i) => (
-                          <div 
-                            key={i} 
-                            onClick={() => setActiveTab("order-details")}
-                            className="flex gap-4 items-center p-3 rounded-lg bg-neutral-50 cursor-pointer hover:bg-neutral-100 transition-colors"
-                          >
-                            <div className="h-12 w-12 rounded bg-neutral-200 flex-shrink-0 animate-pulse"></div>
+                        {orders.length === 0 ? (
+                          <p className="text-sm text-neutral-400 text-center py-2">No orders yet.</p>
+                        ) : orders.slice(0, 2).map((o) => (
+                          <div key={o.id} onClick={() => { setSelectedOrder(o); setActiveTab("order-details"); }}
+                            className="flex gap-4 items-center p-3 rounded-lg bg-neutral-50 cursor-pointer hover:bg-neutral-100 transition-colors">
+                            <div className="h-12 w-12 rounded bg-accent-100 flex-shrink-0 flex items-center justify-center text-accent-600 font-bold text-xs">
+                              #{o.id.slice(0,4).toUpperCase()}
+                            </div>
                             <div>
-                              <p className="text-sm font-semibold text-neutral-900">Order #ORD-{1000 + i}</p>
-                              <p className="text-xs text-neutral-500">Delivered • 2 days ago</p>
+                              <p className="text-sm font-semibold text-neutral-900">Order #{o.id.slice(0,8).toUpperCase()}</p>
+                              <p className="text-xs text-neutral-500">{o.status} • {new Date(o.createdAt).toLocaleDateString()}</p>
                             </div>
                           </div>
                         ))}
@@ -211,31 +215,13 @@ export default function ProfilePage() {
                       <h3 className="font-bold text-neutral-900">Order History</h3>
                     </div>
                     <div className="divide-y divide-neutral-100">
-                      {[1, 2, 3].map((i) => (
-                        <div 
-                          key={i} 
-                          onClick={() => setActiveTab("order-details")}
-                          className="p-4 hover:bg-neutral-50 transition-colors cursor-pointer group"
-                        >
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <p className="font-semibold text-neutral-900 group-hover:text-accent-600 transition-colors">Order #96459761</p>
-                              <p className="text-sm text-neutral-500">Placed on 17 Feb, 2026</p>
-                            </div>
-                            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Delivered</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <p className="text-sm text-neutral-600">4 Items</p>
-                            <p className="font-bold text-neutral-900">$1,199.00</p>
-                          </div>
-                        </div>
-                      ))}
+                      {orders.length===0?(<div className="p-8 text-center text-sm text-neutral-400">No orders yet.</div>):orders.map((o)=>(<div key={o.id} onClick={()=>{setSelectedOrder(o);setActiveTab("order-details");}} className="p-4 hover:bg-neutral-50 transition-colors cursor-pointer group"><div className="flex justify-between items-start mb-2"><div><p className="font-semibold text-neutral-900 group-hover:text-accent-600 transition-colors">Order #{o.id.slice(0,8).toUpperCase()}</p><p className="text-sm text-neutral-500">Placed on {new Date(o.createdAt).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</p></div><span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{o.status}</span></div><div className="flex justify-between items-center"><p className="text-sm text-neutral-600">{o.OrderItem?.length??0} item(s)</p><p className="font-bold text-neutral-900">${o.total?.toFixed(2)}</p></div></div>))}
                     </div>
                   </div>
                 )}
 
                 {activeTab === "order-details" && (
-                  <OrderDetails onBack={() => setActiveTab("orders")} />
+                  <OrderDetails onBack={() => setActiveTab("orders")} order={selectedOrder} />
                 )}
 
                 {activeTab !== "overview" && activeTab !== "orders" && activeTab !== "order-details" && (

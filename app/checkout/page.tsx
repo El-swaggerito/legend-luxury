@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,6 +10,8 @@ import ShippingForm from "./components/ShippingForm";
 import PaymentSection from "./components/PaymentSection";
 import PaymentSuccessModal from "./components/PaymentSuccessModal";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 const checkoutSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,39 +21,67 @@ const checkoutSchema = z.object({
   apartment: z.string().optional(),
   city: z.string().min(2, "City is required"),
   state: z.string().min(2, "State is required"),
-  zip: z.string().min(5, "Postal code is required"),
+  zip: z.string().min(3, "Postal code is required"),
   country: z.string().min(2, "Country is required"),
   phone: z.string().min(10, "Phone number is required"),
 });
 
 export default function CheckoutPage() {
   const { items, total, clear } = useCart();
+  const { user } = useAuth();
+  const { currency } = useCurrency();
   const [showSuccess, setShowSuccess] = useState(false);
-  
+  const [orderId, setOrderId] = useState("");
+  const shipping = 10;
+  const tax = total * 0.08;
+  const finalTotal = total + shipping + tax;
+
   const methods = useForm({
     resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      country: "US",
-    },
+    defaultValues: { country: "US" },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-    // Proceed to payment processing
-  };
+  useEffect(() => {
+    if (user) {
+      const nameParts = (user.name || "").split(" ");
+      methods.setValue("firstName", nameParts[0] || "");
+      methods.setValue("lastName", nameParts.slice(1).join(" ") || "");
+      methods.setValue("email", user.email || "");
+    }
+  }, [user, methods]);
 
-  const handleSuccess = () => {
+  const handleSuccess = async () => {
+
+    const shipping = methods.getValues();
+
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          total: finalTotal,
+          currency,
+          shipping,
+        }),
+      });
+      const data = await res.json();
+      setOrderId(data.orderId || "");
+    } catch (err) {
+      console.error("Order save failed:", err);
+    }
+
     setShowSuccess(true);
-    clear(); // Clear cart on success
+    clear();
   };
 
   if (items.length === 0 && !showSuccess) {
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-            <h1 className="text-2xl font-bold font-serif mb-4">Your cart is empty</h1>
-            <Link href="/" className="text-accent-600 hover:underline">Return to Home</Link>
-        </div>
-    )
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+        <h1 className="text-2xl font-bold font-serif mb-4">Your cart is empty</h1>
+        <Link href="/shop" className="text-accent-600 hover:underline">Browse Shop</Link>
+      </div>
+    );
   }
 
   return (
@@ -66,39 +96,29 @@ export default function CheckoutPage() {
         <h1 className="mb-8 text-3xl font-bold font-serif text-neutral-900 lg:text-4xl">Checkout</h1>
 
         <div className="grid gap-12 lg:grid-cols-12">
-          {/* Main Form Area */}
           <div className="lg:col-span-7">
             <FormProvider {...methods}>
-              <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-10">
-                
-                {/* Contact Info */}
+              <form className="space-y-10">
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</label>
-                    <input
-                      {...methods.register("email")}
-                      id="email"
-                      type="email"
-                      className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
-                      placeholder="you@example.com"
-                    />
-                    {methods.formState.errors.email && (
-                      <p className="text-xs text-red-500">{methods.formState.errors.email.message as string}</p>
-                    )}
-                  </div>
+                  <label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</label>
+                  <input
+                    {...methods.register("email")}
+                    id="email"
+                    type="email"
+                    className="w-full rounded-lg border border-neutral-300 px-4 py-2 focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none transition-all"
+                    placeholder="you@example.com"
+                  />
+                  {methods.formState.errors.email && (
+                    <p className="text-xs text-red-500">{methods.formState.errors.email.message as string}</p>
+                  )}
                 </div>
 
-                {/* Shipping Address */}
                 <ShippingForm />
-
-                {/* Payment Section */}
-                <PaymentSection total={total * 1.08 + 10} onSuccess={handleSuccess} />
-                
+                <PaymentSection total={finalTotal} onSuccess={handleSuccess} />
               </form>
             </FormProvider>
           </div>
 
-          {/* Sidebar Summary */}
           <div className="lg:col-span-5">
             <div className="sticky top-24">
               <OrderSummary />
@@ -106,11 +126,12 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-      
-      <PaymentSuccessModal 
-        isOpen={showSuccess} 
+
+      <PaymentSuccessModal
+        isOpen={showSuccess}
         onClose={() => setShowSuccess(false)}
-        amount={total * 1.08 + 10}
+        amount={finalTotal}
+        transactionId={orderId || undefined}
       />
     </div>
   );

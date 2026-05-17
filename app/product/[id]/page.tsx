@@ -6,6 +6,7 @@ import { getAllProducts, getProductById } from "../../lib/server-products";
 import ProductView from "../../components/ProductView";
 import RecommendedGrid from "../../components/RecommendedGrid";
 import CharmsGrid from "@/app/components/CharmsGrid";
+import ReviewSection from "@/app/components/ReviewSection";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -57,6 +58,7 @@ export default async function ProductPage({ params }: Props) {
         </nav>
 
         <ProductView product={product} />
+        <ReviewSection productSlug={id} />
 
         {/* You May Also Like */}
         <div className="mt-24 border-t border-neutral-200 pt-16">

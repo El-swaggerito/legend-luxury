@@ -107,6 +107,7 @@ export default function PaymentSection({ total, onSuccess }: { total: number; on
     <div className="space-y-6">
       <h2 className="text-xl font-bold font-serif text-neutral-900">Payment Method</h2>
       
+      <button type="button" onClick={handlePaymentSuccess} className="w-full rounded-full border-2 border-dashed border-neutral-300 py-3 text-sm font-medium text-neutral-500 hover:border-accent-600 hover:text-accent-600 transition-colors">Skip Payment (Test Order)</button>
       <div className="grid gap-4 sm:grid-cols-2">
         <label
           className={`relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition-all shadow-sm ${

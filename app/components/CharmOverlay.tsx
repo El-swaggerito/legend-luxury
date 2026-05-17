@@ -1,17 +1,21 @@
 "use client";
-import { LuHeart, LuShoppingCart, LuEye } from "react-icons/lu";
+import { LuHeart, LuShoppingCart } from "react-icons/lu";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
-import { useQuickView, Product } from "../context/QuickViewContext";
 
 type CharmOverlayProps = {
-  product: Product;
+  product: {
+    id: string;
+    title: string;
+    price: number;
+    image: string;
+    category: string;
+  };
 };
 
 export default function CharmOverlay({ product }: CharmOverlayProps) {
   const { addItem } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const { openQuickView } = useQuickView();
 
   const isWishlisted = isInWishlist(product.id);
 
@@ -37,21 +41,15 @@ export default function CharmOverlay({ product }: CharmOverlayProps) {
     });
   };
 
-  const handleQuickView = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    openQuickView(product);
-  };
-
   return (
-    <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 sm:inset-0 sm:flex-row sm:items-center sm:justify-center sm:bg-black/20 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100 pointer-events-auto">
-      <div className="flex flex-col gap-2 sm:flex-row sm:rounded-full sm:bg-white/90 sm:p-2 sm:shadow-sm sm:animate-in sm:fade-in sm:zoom-in-95">
+    <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 sm:inset-0 sm:flex-row sm:items-center sm:justify-center sm:bg-black/20 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100 pointer-events-none">
+      <div className="flex flex-col gap-2 sm:flex-row sm:rounded-full sm:bg-white/90 sm:p-2 sm:shadow-sm sm:animate-in sm:fade-in sm:zoom-in-95 pointer-events-auto">
         <button
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           onClick={handleWishlist}
           className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:shadow-none sm:bg-transparent transition-colors ${
-            isWishlisted 
-              ? "bg-red-50 text-red-500 hover:bg-red-100" 
+            isWishlisted
+              ? "bg-red-50 text-red-500 hover:bg-red-100"
               : "text-neutral-700 hover:bg-neutral-100 hover:text-accent-600"
           }`}
         >
@@ -63,13 +61,6 @@ export default function CharmOverlay({ product }: CharmOverlayProps) {
           className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:shadow-none sm:bg-transparent text-neutral-700 hover:bg-neutral-100 hover:text-accent-600 transition-colors"
         >
           <LuShoppingCart className="h-5 w-5" />
-        </button>
-        <button
-          aria-label="Quick view charm"
-          onClick={handleQuickView}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:shadow-none sm:bg-transparent text-neutral-700 hover:bg-neutral-100 hover:text-accent-600 transition-colors"
-        >
-          <LuEye className="h-5 w-5" />
         </button>
       </div>
     </div>

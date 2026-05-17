@@ -6,7 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -102,4 +104,15 @@ model CartItem {
   quantity  Int     @default(1)
 
   @@unique([cartId, productId])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  productSlug String
+  name        String
+  rating      Int
+  comment     String
+  createdAt   DateTime @default(now())
+
+  @@index([productSlug])
 }

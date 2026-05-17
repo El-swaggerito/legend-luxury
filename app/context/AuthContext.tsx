@@ -1,22 +1,20 @@
-
 "use client";
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export type User = {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
-  avatar?: string;
-  bio?: string;
+  image?: string | null;
 };
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
-  login: (userData: User) => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<string | null>;
+  register: (name: string, email: string, password: string) => Promise<string | null>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 };
 
@@ -28,41 +26,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check for stored user data on mount
-    const storedUser = localStorage.getItem("auth_user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Failed to parse stored user data:", error);
-        localStorage.removeItem("auth_user");
-      }
-    }
-    setLoading(false);
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((d) => setUser(d.user ?? null))
+      .finally(() => setLoading(false));
   }, []);
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("auth_user", JSON.stringify(userData));
+  const login = async (email: string, password: string): Promise<string | null> => {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) return data.error;
+    setUser(data.user);
     router.push("/profile");
+    return null;
   };
 
-  const logout = () => {
+  const register = async (name: string, email: string, password: string): Promise<string | null> => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) return data.error;
+    setUser(data.user);
+    router.push("/profile");
+    return null;
+  };
+
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
-    localStorage.removeItem("auth_user");
     router.push("/login");
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        logout,
-        isAuthenticated: !!user,
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
@@ -70,8 +73,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }

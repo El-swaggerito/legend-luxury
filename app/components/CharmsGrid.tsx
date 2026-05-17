@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import CharmsFilterBar, { FilterChip as FilterChipType } from "./CharmsFilterBar";
 import CharmOverlay from "./CharmOverlay";
+import ImageLightbox from "./ImageLightbox";
 import { useCart } from "../context/CartContext";
 import { useCurrency } from "../context/CurrencyContext";
 import StaggerContainer, { StaggerItem } from "./animations/StaggerContainer";
@@ -109,6 +110,7 @@ export default function CharmsGrid({
   const { formatPrice } = useCurrency();
   const [active, setActive] = useState<string>("All");
   const [charms, setCharms] = useState<Charm[]>([]);
+  const [lightboxImg, setLightboxImg] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -147,7 +149,6 @@ export default function CharmsGrid({
   const visible = useMemo(() => {
     let result = charms;
 
-    // Shop-level filters
     if (filters) {
       if (filters.cat && filters.cat !== "all" && filters.cat !== "charms") {
         return [];
@@ -174,13 +175,10 @@ export default function CharmsGrid({
       }
     }
 
-    // Subcategory filter from CharmsFilterBar
     if (active !== "All") {
       result = result.filter((c) => c.category === active);
     }
 
-    // Grouping: only show one representative per group (the leader)
-    // Defensive: if variations is missing or empty, still show the charm
     result = result.filter((c) => {
       if (!c.variations || c.variations.length === 0) return true;
       return c.id === c.variations[0].id;
@@ -198,7 +196,6 @@ export default function CharmsGrid({
     return limit ? result.slice(0, limit) : result;
   }, [active, charms, distinctCategories, limit, filters]);
 
-  // Hide entire section only when no charms loaded at all
   if (charms.length === 0) return null;
 
   return (
@@ -245,8 +242,12 @@ export default function CharmsGrid({
                 className="group relative rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <BadgeLabel badge={c.badge} />
-                <div className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-lg bg-white">
-                  <Link href={`/product/${c.id}`} className="block w-full h-full">
+                <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-lg bg-white">
+                  {/* Clicking image opens lightbox */}
+                  <div
+                    className="block w-full h-full cursor-zoom-in"
+                    onClick={() => setLightboxImg({ src: c.img, alt: c.title })}
+                  >
                     <Image
                       src={c.img}
                       alt={c.title}
@@ -254,7 +255,7 @@ export default function CharmsGrid({
                       className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                       sizes="(max-width:768px) 90vw, (max-width:1024px) 44vw, 22vw"
                     />
-                  </Link>
+                  </div>
                   <CharmOverlay
                     product={{
                       id: c.id,
@@ -324,6 +325,15 @@ export default function CharmsGrid({
           </StaggerContainer>
         )}
       </div>
+
+      {/* Lightbox */}
+      {lightboxImg && (
+        <ImageLightbox
+          src={lightboxImg.src}
+          alt={lightboxImg.alt}
+          onClose={() => setLightboxImg(null)}
+        />
+      )}
     </section>
   );
 }

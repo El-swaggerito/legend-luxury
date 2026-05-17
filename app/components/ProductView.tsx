@@ -1,10 +1,8 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { LuHeart, LuMinus, LuPlus, LuShare2, LuStar } from "react-icons/lu";
+import { LuHeart, LuMinus, LuPlus, LuStar } from "react-icons/lu";
 import { useCart } from "../context/CartContext";
 import { useCurrency } from "../context/CurrencyContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -16,30 +14,46 @@ export default function ProductView({ product }: { product: Product }) {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("M8/W10");
-  const [selectedColor, setSelectedColor] = useState("Default");
+  const [selectedImg, setSelectedImg] = useState(product.img);
+  const [selectedVariation, setSelectedVariation] = useState<Product>(product);
+  const [reviewCount, setReviewCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(`reviews_${product.id}`);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setReviewCount(parsed.length);
+    } else {
+      setReviewCount(0);
+    }
+  }, [product.id]);
 
   const isShoe = ["Clogs", "Men", "Women", "Kids", "Unisex"].includes(product.category);
-  const isCharm = !isShoe;
-  
   const isWishlisted = isInWishlist(product.id);
 
-  const handleAddToCart = () => {
-    const variantId = isShoe ? `${product.id}-${selectedSize}` : `${product.id}-${selectedColor}`;
-    
-    let variantTitle = product.title;
-    if (isShoe) {
-      variantTitle = `${product.title} (Size: ${selectedSize})`;
-    } else if (selectedColor !== "Default") {
-      variantTitle = `${product.title} (${selectedColor})`;
-    }
+  const variations = product.variations && product.variations.length > 1
+    ? product.variations
+    : [];
 
+const thumbnails =
+  variations.length > 0
+    ? [...new Set(variations.map((v) => v.img))]
+    : [product.img];
+
+  const handleVariationClick = (v: Product) => {
+    setSelectedVariation(v);
+    setSelectedImg(v.img);
+  };
+
+  const handleAddToCart = () => {
+    const id = isShoe
+      ? `${product.id}-${selectedSize}`
+      : selectedVariation.id;
+    const title = isShoe
+      ? `${product.title} (Size: ${selectedSize})`
+      : selectedVariation.title;
     for (let i = 0; i < quantity; i++) {
-      addItem({
-        id: variantId,
-        title: variantTitle,
-        price: product.price,
-        image: product.img,
-      });
+      addItem({ id, title, price: selectedVariation.price, image: selectedImg });
     }
   };
 
@@ -49,10 +63,10 @@ export default function ProductView({ product }: { product: Product }) {
       <div className="space-y-4">
         <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-50 border border-neutral-100">
           <Image
-            src={product.img}
-            alt={product.title}
+            src={selectedImg}
+            alt={selectedVariation.title}
             fill
-            className="object-contain p-8"
+            className="object-contain p-8 transition-opacity duration-300"
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
           />
@@ -62,16 +76,8 @@ export default function ProductView({ product }: { product: Product }) {
             </span>
           )}
         </div>
-        <div className="grid grid-cols-4 gap-4">
-          {[product.img, product.img, product.img, product.img].map((img, i) => (
-            <button
-              key={i}
-              className="relative aspect-square overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 hover:border-accent-600 focus:ring-2 focus:ring-accent-600 focus:outline-none"
-            >
-              <Image src={img} alt="" fill className="object-contain p-2" />
-            </button>
-          ))}
-        </div>
+
+
       </div>
 
       {/* Product Details */}
@@ -79,9 +85,9 @@ export default function ProductView({ product }: { product: Product }) {
         <div className="mb-6 border-b border-neutral-200 pb-6">
           <div className="flex items-center justify-between">
             <h1 className="heading-2 text-neutral-900" style={{ fontFamily: "var(--font-serif)" }}>
-              {product.title}
+              {selectedVariation.title}
             </h1>
-            <button 
+            <button
               type="button"
               onClick={() => toggleWishlist({ id: product.id, title: product.title, price: product.price, image: product.img })}
               className={`rounded-full p-2 transition-colors ${isWishlisted ? "bg-red-50 text-red-500" : "text-neutral-400 hover:bg-neutral-100"}`}
@@ -90,20 +96,20 @@ export default function ProductView({ product }: { product: Product }) {
               <LuHeart className={`h-6 w-6 ${isWishlisted ? "fill-current" : ""}`} />
             </button>
           </div>
-          
+
           <div className="mt-4 flex items-center gap-4">
             <div className="flex items-center text-warning-500">
-              <LuStar className="fill-current h-5 w-5" />
-              <LuStar className="fill-current h-5 w-5" />
-              <LuStar className="fill-current h-5 w-5" />
-              <LuStar className="fill-current h-5 w-5" />
-              <LuStar className="fill-current h-5 w-5" />
+              {[...Array(5)].map((_, i) => (
+                <LuStar key={i} className="fill-current h-5 w-5" />
+              ))}
             </div>
-            <span className="text-neutral-500 typo-base">{product.reviews} Reviews</span>
+            <a href="#reviews" className="text-neutral-500 typo-base hover:text-accent-600 hover:underline cursor-pointer transition-colors">
+              {reviewCount === null ? "..." : reviewCount} {reviewCount === 1 ? "Review" : "Reviews"}
+            </a>
           </div>
 
           <div className="mt-6 flex items-baseline gap-4">
-            <span className="heading-2 text-neutral-900">{formatPrice(product.price)}</span>
+            <span className="heading-2 text-neutral-900">{formatPrice(selectedVariation.price)}</span>
             {product.originalPrice && (
               <span className="text-lg text-neutral-400 line-through">{formatPrice(product.originalPrice)}</span>
             )}
@@ -111,8 +117,8 @@ export default function ProductView({ product }: { product: Product }) {
         </div>
 
         <div className="space-y-6">
-          {/* Attribute Selector */}
-          {isShoe ? (
+          {/* Size selector for shoes */}
+          {isShoe && (
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="font-semibold text-neutral-900">Size</label>
@@ -134,44 +140,42 @@ export default function ProductView({ product }: { product: Product }) {
                 ))}
               </div>
             </div>
-          ) : product.variations && product.variations.length > 1 ? (
+          )}
+
+          {/* Color / Variation swatches for charms */}
+          {!isShoe && variations.length > 1 && (
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="font-semibold text-neutral-900">Variations</label>
+              <div className="flex items-center gap-2 mb-3">
+                <label className="font-semibold text-neutral-900">Color:</label>
+                <span className="text-neutral-500 typo-small">{selectedVariation.title}</span>
               </div>
-              <div className="flex flex-wrap gap-3">
-                {product.variations.map((v) => (
-                  <Link
+              <div className="flex flex-wrap gap-2">
+                {variations.map((v) => (
+                  <button
                     key={v.id}
-                    href={`/product/${v.id}`}
-                    className={`group relative h-16 w-16 rounded-lg border-2 overflow-hidden transition-all ${
-                      v.id === product.id
-                        ? "border-accent-600 ring-2 ring-accent-100 ring-offset-2"
-                        : "border-transparent hover:border-neutral-300"
-                    }`}
+                    onClick={() => handleVariationClick(v)}
                     title={v.title}
+                    className={`relative h-14 w-14 rounded-lg border-2 overflow-hidden transition-all ${
+                      v.id === selectedVariation.id
+                        ? "border-accent-600 ring-2 ring-accent-100 ring-offset-1"
+                        : "border-neutral-200 hover:border-neutral-400"
+                    }`}
                   >
-                    <Image src={v.img} alt={v.title} fill className="object-contain bg-neutral-50 p-1" sizes="64px" />
-                  </Link>
+                    <Image src={v.img} alt={v.title} fill className="object-contain bg-neutral-50 p-1" sizes="56px" />
+                  </button>
                 ))}
               </div>
             </div>
-          ) : null}
+          )}
 
-          {/* Quantity & Add to Cart */}
+          {/* Quantity + Add to Cart */}
           <div className="flex gap-4">
             <div className="flex items-center rounded-full border border-neutral-300 bg-white px-4">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-2 text-neutral-500 hover:text-neutral-900"
-              >
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-2 text-neutral-500 hover:text-neutral-900">
                 <LuMinus className="h-4 w-4" />
               </button>
               <span className="w-8 text-center font-semibold">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="p-2 text-neutral-500 hover:text-neutral-900"
-              >
+              <button onClick={() => setQuantity(quantity + 1)} className="p-2 text-neutral-500 hover:text-neutral-900">
                 <LuPlus className="h-4 w-4" />
               </button>
             </div>
@@ -187,7 +191,7 @@ export default function ProductView({ product }: { product: Product }) {
           <div className="prose prose-neutral mt-8">
             <h3 className="text-lg font-semibold text-neutral-900">Description</h3>
             <p className="text-neutral-600 mt-2 leading-relaxed">
-              {product.description || "Classic comfort meets modern style. These shoes feature our signature lightweight construction, ventilation ports for breathability, and pivoting heel straps for a more secure fit."}
+              {product.description || "Classic comfort meets modern style."}
             </p>
             <ul className="mt-4 list-disc pl-5 space-y-1 text-neutral-600">
               <li>Incredibly light and fun to wear</li>
