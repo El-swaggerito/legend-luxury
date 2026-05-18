@@ -7,6 +7,7 @@ export type User = {
   name: string | null;
   email: string;
   image?: string | null;
+  bio?: string | null;
 };
 
 type AuthContextType = {

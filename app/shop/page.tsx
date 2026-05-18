@@ -1,9 +1,3 @@
-import type { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Shop",
-  description: "Browse our full collection of premium custom Crocs and charms. Filter by category, price, and style to find your perfect pair.",
-};
-
 "use client";
 
 import Link from "next/link";
