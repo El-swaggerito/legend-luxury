@@ -30,7 +30,7 @@ const ICONS: Record<string, string> = {
   Bags: "/decors/bags.png",
   Bee: "/decors/bee.png",
   Bicycle: "/decors/bicycle.png",
-  Chains: "/decors/chains.png",
+  Chain: "/decors/chains.png",
   Butterfly: "/decors/butterfly.png",
   Cloth: "/decors/cloth.png",
   Flower: "/decors/flower.png",

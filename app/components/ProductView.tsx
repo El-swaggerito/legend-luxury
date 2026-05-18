@@ -15,6 +15,7 @@ export default function ProductView({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("M8/W10");
   const [selectedImg, setSelectedImg] = useState(product.img);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Product>(product);
   const [reviewCount, setReviewCount] = useState<number | null>(null);
 
@@ -122,7 +123,7 @@ const thumbnails =
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="font-semibold text-neutral-900">Size</label>
-                <button className="text-accent-600 underline typo-small">Size Guide</button>
+                <button onClick={() => setShowSizeGuide(true)} className="text-accent-600 underline typo-small">Size Guide</button>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {["M4/W6", "M5/W7", "M6/W8", "M7/W9", "M8/W10", "M9/W11", "M10/W12", "M11"].map((size) => (
@@ -202,6 +203,37 @@ const thumbnails =
           </div>
         </div>
       </div>
+      {showSizeGuide && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setShowSizeGuide(false)}>
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-neutral-900">Size Guide</h3>
+              <button onClick={() => setShowSizeGuide(false)} className="text-neutral-400 hover:text-neutral-900">✕</button>
+            </div>
+            <table className="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr className="bg-neutral-50">
+                  <th className="border border-neutral-200 px-3 py-2 font-semibold">Size</th>
+                  <th className="border border-neutral-200 px-3 py-2 font-semibold">Men (US)</th>
+                  <th className="border border-neutral-200 px-3 py-2 font-semibold">Women (US)</th>
+                  <th className="border border-neutral-200 px-3 py-2 font-semibold">EU</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[["M4/W6","4","6","36-37"],["M5/W7","5","7","37-38"],["M6/W8","6","8","38-39"],["M7/W9","7","9","39-40"],["M8/W10","8","10","41-42"],["M9/W11","9","11","42-43"],["M10/W12","10","12","43-44"],["M11","-","11","44-45"]].map(([s,m,w,eu]) => (
+                  <tr key={s} className="hover:bg-neutral-50">
+                    <td className="border border-neutral-200 px-3 py-2 font-medium">{s}</td>
+                    <td className="border border-neutral-200 px-3 py-2">{m}</td>
+                    <td className="border border-neutral-200 px-3 py-2">{w}</td>
+                    <td className="border border-neutral-200 px-3 py-2">{eu}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="mt-4 text-xs text-neutral-500">Crocs fit true to size. When in between sizes, we recommend going up.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
